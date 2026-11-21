@@ -1,0 +1,22 @@
+# Dependencias (Backend y Frontend)
+node_modules/
+
+# Variables de entorno reales (nunca subir credenciales locales)
+.env
+.env.local
+.env.*.local
+
+# Compilados de producción
+dist/
+build/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+*.log
+
+# Archivos de sistema operativo y editores
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
