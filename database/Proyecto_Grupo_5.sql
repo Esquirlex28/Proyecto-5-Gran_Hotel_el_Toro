@@ -83,6 +83,15 @@ CREATE TABLE Huespedes (
     CONSTRAINT CK_Huesped_Valido CHECK(DNI IS NOT NULL OR Pasaporte IS NOT NULL)
 )ENGINE=InnoDB;
 
+CREATE TABLE Usuarios_Huesped (
+    ID_Usuario_Huesped INT AUTO_INCREMENT PRIMARY KEY,
+    ID_Huesped INT NOT NULL UNIQUE,
+    Usuario VARCHAR(50) NOT NULL UNIQUE,
+    Contraseña_Hash VARCHAR(500) NOT NULL,
+    Estado INT NOT NULL,
+    CONSTRAINT FK_Usuario_Huesped FOREIGN KEY (ID_Huesped) REFERENCES Huespedes(ID_Huesped)
+) ENGINE=InnoDB;
+
 -- Creación de tablas relacionadas a los empleados
 
 CREATE TABLE Cargos_Empleado (
@@ -112,10 +121,11 @@ CREATE TABLE Empleados (
 )ENGINE=InnoDB;
 
 CREATE TABLE Usuarios_Empleado (
-    ID_Usuario INT AUTO_INCREMENT PRIMARY KEY,
+    ID_Usuario_Empleado INT AUTO_INCREMENT PRIMARY KEY,
     ID_Empleado INT NOT NULL UNIQUE,
     Usuario VARCHAR(50) NOT NULL UNIQUE,
     Contraseña_Hash VARCHAR(500) NOT NULL,
+    Estado INT NOT NULL,
     CONSTRAINT FK_Usuario_Empleado FOREIGN KEY (ID_Empleado) REFERENCES Empleados(ID_Empleado)
 ) ENGINE=InnoDB;
 
