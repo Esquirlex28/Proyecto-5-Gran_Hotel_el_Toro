@@ -15,6 +15,9 @@ app.get('/', (req, res) => {
   res.json({ mensaje: 'API del Gran Hotel El Toro activa' });
 });
 
+//--- Rutas---
+app.use('/api/habitaciones', require('./routes/habitaciones'));
+
 // --- ENCENDIDO DEL SERVIDOR ---
 app.listen(PORT, () => {
   console.log(`Servidor backend corriendo en http://localhost:${PORT}`);
