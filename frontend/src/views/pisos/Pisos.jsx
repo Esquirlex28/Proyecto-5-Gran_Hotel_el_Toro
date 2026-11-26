@@ -20,11 +20,41 @@ import CIcon from '@coreui/icons-react'
 import * as icon from '@coreui/icons'
 
 const pisosPorDefecto = [
-  { ID_Piso: 1, Codigo_Piso: 'P1', Nombre_Piso: 'Piso 1', Capacidad_Habitaciones: 20, Observaciones: 'Acceso a recepcion y restaurante' },
-  { ID_Piso: 2, Codigo_Piso: 'P2', Nombre_Piso: 'Piso 2', Capacidad_Habitaciones: 20, Observaciones: '' },
-  { ID_Piso: 3, Codigo_Piso: 'P3', Nombre_Piso: 'Piso 3', Capacidad_Habitaciones: 18, Observaciones: 'Habitaciones Business' },
-  { ID_Piso: 4, Codigo_Piso: 'P4', Nombre_Piso: 'Piso 4', Capacidad_Habitaciones: 12, Observaciones: 'Suites con vista al mar' },
-  { ID_Piso: 5, Codigo_Piso: 'PH', Nombre_Piso: 'Penthouse', Capacidad_Habitaciones: 2, Observaciones: 'Suites presidenciales' },
+  {
+    ID_Piso: 1,
+    Codigo_Piso: 'P1',
+    Nombre_Piso: 'Piso 1',
+    Capacidad_Habitaciones: 20,
+    Observaciones: 'Acceso a recepcion y restaurante',
+  },
+  {
+    ID_Piso: 2,
+    Codigo_Piso: 'P2',
+    Nombre_Piso: 'Piso 2',
+    Capacidad_Habitaciones: 20,
+    Observaciones: '',
+  },
+  {
+    ID_Piso: 3,
+    Codigo_Piso: 'P3',
+    Nombre_Piso: 'Piso 3',
+    Capacidad_Habitaciones: 18,
+    Observaciones: 'Habitaciones Business',
+  },
+  {
+    ID_Piso: 4,
+    Codigo_Piso: 'P4',
+    Nombre_Piso: 'Piso 4',
+    Capacidad_Habitaciones: 12,
+    Observaciones: 'Suites con vista al mar',
+  },
+  {
+    ID_Piso: 5,
+    Codigo_Piso: 'PH',
+    Nombre_Piso: 'Penthouse',
+    Capacidad_Habitaciones: 2,
+    Observaciones: 'Suites presidenciales',
+  },
 ]
 
 const Pisos = () => {
@@ -44,7 +74,7 @@ const Pisos = () => {
   return (
     <>
       {mensaje && (
-        <CAlert color="danger" className="mt-3 text-center shadow">
+        <CAlert color="danger" className="text-center shadow-sm">
           ¡Piso eliminado con exito!
         </CAlert>
       )}
@@ -56,7 +86,8 @@ const Pisos = () => {
           </p>
           <CButton
             color="primary"
-            className="text-primary bg-transparent border-2 flex-shrink-0"
+            variant="outline"
+            className="flex-shrink-0"
             onClick={() => navigate('/panel/pisos/form')}
           >
             <CIcon icon={icon.cilPlus} /> Crear Piso
@@ -64,7 +95,7 @@ const Pisos = () => {
         </div>
       </CContainer>
       <hr />
-      <div className="bg-white rounded-3 shadow-sm p-3 mb-4">
+      <div className="bg-body rounded-3 shadow-sm p-3 mb-4">
         <CTable hover responsive align="middle" className="mb-0">
           <CTableHead>
             <CTableRow>
@@ -94,7 +125,8 @@ const Pisos = () => {
                   <CButton
                     color="primary"
                     size="sm"
-                    className="text-primary bg-transparent border-2 me-2"
+                    variant="outline"
+                    className="me-2"
                     onClick={() => navigate(`/panel/pisos/${p.ID_Piso}/editar`)}
                   >
                     <CIcon icon={icon.cilReload} /> Modificar
@@ -102,7 +134,7 @@ const Pisos = () => {
                   <CButton
                     color="danger"
                     size="sm"
-                    className="text-danger bg-transparent border-2"
+                    variant="outline"
                     onClick={() => setPisoEliminar(p)}
                   >
                     <CIcon icon={icon.cilDelete} /> Eliminar
@@ -130,7 +162,7 @@ const Pisos = () => {
           <CButton color="secondary" onClick={() => setPisoEliminar(null)}>
             Cancelar
           </CButton>
-          <CButton color="danger" className="text-white" onClick={deletePiso}>
+          <CButton color="danger" onClick={deletePiso}>
             Eliminar
           </CButton>
         </CModalFooter>

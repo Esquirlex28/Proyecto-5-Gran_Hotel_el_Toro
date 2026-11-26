@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { CContainer, CForm, CFormInput, CRow, CCol, CButton, CAlert } from '@coreui/react'
+import { CCard, CCardBody, CForm, CFormInput, CRow, CCol, CButton, CAlert } from '@coreui/react'
 
 const FormTipoHabitacion = () => {
   const navigate = useNavigate()
@@ -30,69 +30,69 @@ const FormTipoHabitacion = () => {
   return (
     <>
       {mensaje && (
-        <CAlert color="success" className="mt-3 text-center shadow">
+        <CAlert color="success" className="text-center shadow-sm">
           ¡Tipo de habitacion {esEdicion ? 'actualizado' : 'creado'} con exito!
         </CAlert>
       )}
-      <CContainer
-        className="position-relative bg-white rounded-3 shadow-lg p-4"
-        style={{ width: '100vw', height: '60vh' }}
-      >
-        <h1>{esEdicion ? 'Editar' : 'Crear'} Tipo de Habitacion</h1>
-        <hr className="mb-5" />
-        <CForm onSubmit={handleSubmit}>
-          <CFormInput
-            className="mb-4"
-            type="text"
-            name="nombre"
-            label="Nombre del Tipo"
-            placeholder="Suite"
-            maxLength={100}
-            required
-            value={tipo.nombre}
-            onChange={handleChange}
-          />
-          <CRow>
-            <CCol xs className="mb-4">
-              <CFormInput
-                type="number"
-                name="capacidadMaxima"
-                label="Capacidad Maxima"
-                placeholder="2"
-                min={1}
-                required
-                value={tipo.capacidadMaxima}
-                onChange={handleChange}
-              />
-            </CCol>
-            <CCol xs>
-              <CFormInput
-                type="number"
-                name="tarifaBase"
-                label="Tarifa Base"
-                placeholder="1500.00"
-                min={0.01}
-                step={0.01}
-                required
-                value={tipo.tarifaBase}
-                onChange={handleChange}
-              />
-            </CCol>
-          </CRow>
-          <div className="position-absolute bottom-0 start-0 end-0 px-4 py-4 d-flex justify-content-between align-items-center">
-            <CButton
-              color="secondary"
-              type="button"
-              onClick={() => navigate('/panel/tipohabitacion')}
-            >
-              Cancelar
-            </CButton>
-            <CButton color="primary" type="submit">
-              Guardar
-            </CButton>
-          </div>
-        </CForm>
-      </CContainer>
+      <CCard className="shadow-sm mb-4">
+        <CCardBody className="p-4">
+          <h1 className="h3">{esEdicion ? 'Editar' : 'Crear'} Tipo de Habitacion</h1>
+          <hr className="mb-4" />
+          <CForm onSubmit={handleSubmit}>
+            <CFormInput
+              className="mb-4"
+              type="text"
+              name="nombre"
+              label="Nombre del Tipo"
+              placeholder="Suite"
+              maxLength={100}
+              required
+              value={tipo.nombre}
+              onChange={handleChange}
+            />
+            <CRow>
+              <CCol md={6} className="mb-4">
+                <CFormInput
+                  type="number"
+                  name="capacidadMaxima"
+                  label="Capacidad Maxima"
+                  placeholder="2"
+                  min={1}
+                  required
+                  value={tipo.capacidadMaxima}
+                  onChange={handleChange}
+                />
+              </CCol>
+              <CCol md={6} className="mb-4">
+                <CFormInput
+                  type="number"
+                  name="tarifaBase"
+                  label="Tarifa Base"
+                  placeholder="1500.00"
+                  min={0.01}
+                  step={0.01}
+                  required
+                  value={tipo.tarifaBase}
+                  onChange={handleChange}
+                />
+              </CCol>
+            </CRow>
+            <div className="d-flex justify-content-between align-items-center gap-2 mt-4 pt-3 border-top">
+              <CButton
+                color="secondary"
+                variant="outline"
+                type="button"
+                onClick={() => navigate('/panel/tipohabitacion')}
+              >
+                Cancelar
+              </CButton>
+              <CButton color="primary" type="submit">
+                Guardar
+              </CButton>
+            </div>
+          </CForm>
+        </CCardBody>
+      </CCard>
     </>
   )
 }

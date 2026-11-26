@@ -24,7 +24,12 @@ const tiposPorDefecto = [
   { ID_Tipo_Habitacion: 2, Nombre_Tipo: 'Doble', Capacidad_Maxima: 4, Tarifa_Base: 1200.0 },
   { ID_Tipo_Habitacion: 3, Nombre_Tipo: 'Business', Capacidad_Maxima: 2, Tarifa_Base: 1800.0 },
   { ID_Tipo_Habitacion: 4, Nombre_Tipo: 'Suite', Capacidad_Maxima: 4, Tarifa_Base: 3500.0 },
-  { ID_Tipo_Habitacion: 5, Nombre_Tipo: 'Suite Presidencial', Capacidad_Maxima: 6, Tarifa_Base: 7500.0 },
+  {
+    ID_Tipo_Habitacion: 5,
+    Nombre_Tipo: 'Suite Presidencial',
+    Capacidad_Maxima: 6,
+    Tarifa_Base: 7500.0,
+  },
 ]
 
 const TipoHabitacion = () => {
@@ -44,7 +49,7 @@ const TipoHabitacion = () => {
   return (
     <>
       {mensaje && (
-        <CAlert color="danger" className="mt-3 text-center shadow">
+        <CAlert color="danger" className="text-center shadow-sm">
           ¡Tipo de habitacion eliminado con exito!
         </CAlert>
       )}
@@ -56,7 +61,8 @@ const TipoHabitacion = () => {
           </p>
           <CButton
             color="primary"
-            className="text-primary bg-transparent border-2 flex-shrink-0"
+            variant="outline"
+            className="flex-shrink-0"
             onClick={() => navigate('/panel/tipohabitacion/form')}
           >
             <CIcon icon={icon.cilPlus} /> Crear Tipo de Habitacion
@@ -64,7 +70,7 @@ const TipoHabitacion = () => {
         </div>
       </CContainer>
       <hr />
-      <div className="bg-white rounded-3 shadow-sm p-3 mb-4">
+      <div className="bg-body rounded-3 shadow-sm p-3 mb-4">
         <CTable hover responsive align="middle" className="mb-0">
           <CTableHead>
             <CTableRow>
@@ -95,7 +101,8 @@ const TipoHabitacion = () => {
                   <CButton
                     color="primary"
                     size="sm"
-                    className="text-primary bg-transparent border-2 me-2"
+                    variant="outline"
+                    className="me-2"
                     onClick={() => navigate(`/panel/tipohabitacion/${t.ID_Tipo_Habitacion}/editar`)}
                   >
                     <CIcon icon={icon.cilReload} /> Modificar
@@ -103,7 +110,7 @@ const TipoHabitacion = () => {
                   <CButton
                     color="danger"
                     size="sm"
-                    className="text-danger bg-transparent border-2"
+                    variant="outline"
                     onClick={() => setTipoEliminar(t)}
                   >
                     <CIcon icon={icon.cilDelete} /> Eliminar
@@ -131,7 +138,7 @@ const TipoHabitacion = () => {
           <CButton color="secondary" onClick={() => setTipoEliminar(null)}>
             Cancelar
           </CButton>
-          <CButton color="danger" className="text-white" onClick={deleteTipo}>
+          <CButton color="danger" onClick={deleteTipo}>
             Eliminar
           </CButton>
         </CModalFooter>

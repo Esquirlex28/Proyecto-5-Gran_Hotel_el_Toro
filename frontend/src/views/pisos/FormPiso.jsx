@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import {
-  CContainer,
+  CCard,
+  CCardBody,
   CForm,
   CFormInput,
   CFormTextarea,
@@ -44,73 +45,77 @@ const FormPiso = () => {
   return (
     <>
       {mensaje && (
-        <CAlert color="success" className="mt-3 text-center shadow">
+        <CAlert color="success" className="text-center shadow-sm">
           ¡Piso {esEdicion ? 'actualizado' : 'creado'} con exito!
         </CAlert>
       )}
-      <CContainer
-        className="position-relative bg-white rounded-3 shadow-lg p-4"
-        style={{ width: '100vw', height: '75vh' }}
-      >
-        <h1>{esEdicion ? 'Editar' : 'Crear'} Piso</h1>
-        <hr className="mb-5" />
-        <CForm onSubmit={handleSubmit}>
-          <CRow>
-            <CCol xs className="mb-4">
-              <CFormInput
-                type="text"
-                name="codigo"
-                label="Codigo del Piso"
-                placeholder="P1"
-                maxLength={25}
-                required
-                value={piso.codigo}
-                onChange={handleChange}
-              />
-            </CCol>
-            <CCol xs>
-              <CFormInput
-                type="text"
-                name="nombre"
-                label="Nombre del Piso"
-                placeholder="Piso 1"
-                maxLength={50}
-                required
-                value={piso.nombre}
-                onChange={handleChange}
-              />
-            </CCol>
-          </CRow>
-          <CFormInput
-            className="mb-4"
-            type="number"
-            name="capacidadHabitaciones"
-            label="Capacidad de Habitaciones"
-            placeholder="20"
-            min={1}
-            required
-            value={piso.capacidadHabitaciones}
-            onChange={handleChange}
-          />
-          <CFormTextarea
-            label="Observaciones"
-            rows={4}
-            maxLength={500}
-            text="Opcional. Maximo 500 caracteres."
-            name="observaciones"
-            value={piso.observaciones}
-            onChange={handleChange}
-          />
-          <div className="position-absolute bottom-0 start-0 end-0 px-4 py-4 d-flex justify-content-between align-items-center">
-            <CButton color="secondary" type="button" onClick={() => navigate('/panel/pisos')}>
-              Cancelar
-            </CButton>
-            <CButton color="primary" type="submit">
-              Guardar
-            </CButton>
-          </div>
-        </CForm>
-      </CContainer>
+      <CCard className="shadow-sm mb-4">
+        <CCardBody className="p-4">
+          <h1 className="h3">{esEdicion ? 'Editar' : 'Crear'} Piso</h1>
+          <hr className="mb-4" />
+          <CForm onSubmit={handleSubmit}>
+            <CRow>
+              <CCol md={6} className="mb-4">
+                <CFormInput
+                  type="text"
+                  name="codigo"
+                  label="Codigo del Piso"
+                  placeholder="P1"
+                  maxLength={25}
+                  required
+                  value={piso.codigo}
+                  onChange={handleChange}
+                />
+              </CCol>
+              <CCol md={6} className="mb-4">
+                <CFormInput
+                  type="text"
+                  name="nombre"
+                  label="Nombre del Piso"
+                  placeholder="Piso 1"
+                  maxLength={50}
+                  required
+                  value={piso.nombre}
+                  onChange={handleChange}
+                />
+              </CCol>
+            </CRow>
+            <CFormInput
+              className="mb-4"
+              type="number"
+              name="capacidadHabitaciones"
+              label="Capacidad de Habitaciones"
+              placeholder="20"
+              min={1}
+              required
+              value={piso.capacidadHabitaciones}
+              onChange={handleChange}
+            />
+            <CFormTextarea
+              label="Observaciones"
+              rows={4}
+              maxLength={500}
+              text="Opcional. Maximo 500 caracteres."
+              name="observaciones"
+              value={piso.observaciones}
+              onChange={handleChange}
+            />
+            <div className="d-flex justify-content-between align-items-center gap-2 mt-4 pt-3 border-top">
+              <CButton
+                color="secondary"
+                variant="outline"
+                type="button"
+                onClick={() => navigate('/panel/pisos')}
+              >
+                Cancelar
+              </CButton>
+              <CButton color="primary" type="submit">
+                Guardar
+              </CButton>
+            </div>
+          </CForm>
+        </CCardBody>
+      </CCard>
     </>
   )
 }

@@ -2,9 +2,6 @@ import { useParams, useNavigate } from 'react-router-dom'
 import React, { useState, useEffect } from 'react'
 import {
   CButton,
-  CContainer,
-  CRow,
-  CCol,
   CListGroup,
   CListGroupItem,
   CModal,
@@ -12,7 +9,7 @@ import {
   CModalTitle,
   CModalBody,
   CModalFooter,
-  CAlert
+  CAlert,
 } from '@coreui/react'
 
 import image from '../../assets/images/habitacion.jpg'
@@ -42,87 +39,74 @@ const DetallesHabitacion = () => {
   return (
     <>
       {mensaje && (
-        <CAlert color="danger" className="mt-3 text-center shadow">
+        <CAlert color="danger" className="text-center shadow-sm">
           ¡Habitacion eliminada con exito!
         </CAlert>
       )}
       <div
-        className="position-relative overflow-hidden rounded-3 shadow-lg mb-4"
-        style={{ height: '50vh' }}
+        className="position-relative overflow-hidden rounded-3 shadow mb-4"
+        style={{ height: 'clamp(14rem, 45vh, 26rem)' }}
       >
         <img
           src={image}
-          alt={`Habitacion`}
-          className="position-absolute top-0 w-100 h-100"
-          style={{ objectFit: 'cover' }}
+          alt="Habitacion"
+          className="position-absolute top-0 start-0 w-100 h-100 object-fit-cover"
         />
-        <h1 className="position-absolute bottom-0 start-0 ms-4 mb-4 text-white">
+        {/* Degradado para que el titulo blanco sea legible sobre cualquier imagen */}
+        <div
+          className="position-absolute top-0 start-0 w-100 h-100"
+          style={{ background: 'linear-gradient(to top, rgba(0,0,0,.65), rgba(0,0,0,0) 55%)' }}
+        />
+        <h1 className="position-absolute bottom-0 start-0 m-4 h2 text-white">
           Gestion de la Habitacion #{}
         </h1>
 
         <CButton
-          color="ligth"
-          className="position-absolute top-0 start-0 m-2 bg-white bg-opacity-50 text-black"
+          color="light"
+          size="sm"
+          className="position-absolute top-0 start-0 m-3 shadow-sm"
           onClick={() => navigate('/panel/habitaciones')}
         >
-          <span>
-            <CIcon icon={icon.cilArrowLeft} /> Volver
-          </span>
+          <CIcon icon={icon.cilArrowLeft} className="me-1" /> Volver
         </CButton>
       </div>
-      <CContainer className="mb-4">
-        <CRow className="justify-items-center align-items-center text-center">
-          <CCol className="d-flex justify-content-center align-items-center">
-            <h2>Acciones</h2>
-          </CCol>
-          <CCol className="d-flex justify-content-center align-items-center">
-            <CButton
-              color="primary"
-              className="top-0 start-0 text-primary bg-transparent border-2"
-              onClick={() => navigate(`/panel/habitaciones/${id}/editar`)}
-            >
-              <span>
-                <CIcon icon={icon.cilReload} /> Modificar
-              </span>
-            </CButton>
-          </CCol>
-          <CCol className="d-flex justify-content-center align-items-center">
-            <CButton
-              color="danger"
-              className="top-0 start-0 text-danger bg-transparent border-2"
-              onClick={() => setModalEliminar(true)}
-            >
-              <span>
-                <CIcon icon={icon.cilDelete} /> Eliminar
-              </span>
-            </CButton>
-          </CCol>
-        </CRow>
-      </CContainer>
-      <h2>Detalles de la Habitacion</h2>
-      <hr />
-      <CListGroup style={{ height: '25vh' }}>
-        <CListGroupItem className="d-flex justify-content-between mb-3">
+      <div className="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
+        <h2 className="h4 mb-0">Detalles de la Habitacion</h2>
+        <div className="d-flex gap-2">
+          <CButton
+            color="primary"
+            variant="outline"
+            onClick={() => navigate(`/panel/habitaciones/${id}/editar`)}
+          >
+            <CIcon icon={icon.cilPencil} className="me-1" /> Modificar
+          </CButton>
+          <CButton color="danger" variant="outline" onClick={() => setModalEliminar(true)}>
+            <CIcon icon={icon.cilTrash} className="me-1" /> Eliminar
+          </CButton>
+        </div>
+      </div>
+      <CListGroup className="shadow-sm mb-4">
+        <CListGroupItem className="d-flex justify-content-between py-3">
           <span>
-            <CIcon icon={icon.cilTags} className="mx-2" /> Tipo
+            <CIcon icon={icon.cilTags} className="me-2 text-body-secondary" /> Tipo
           </span>
           <strong>{}</strong>
         </CListGroupItem>
-        <CListGroupItem className="d-flex justify-content-between mb-3">
+        <CListGroupItem className="d-flex justify-content-between py-3">
           <span>
-            <CIcon icon={icon.cilPeople} className="mx-2" /> Capacidad
+            <CIcon icon={icon.cilPeople} className="me-2 text-body-secondary" /> Capacidad
           </span>
           <strong>{}</strong>
         </CListGroupItem>
-        <CListGroupItem className="d-flex justify-content-between mb-3">
+        <CListGroupItem className="d-flex justify-content-between py-3">
           <span>
-            <CIcon icon={icon.cilDollar} className="mx-2" /> Tarifa
+            <CIcon icon={icon.cilDollar} className="me-2 text-body-secondary" /> Tarifa
           </span>
           <strong>{}</strong>
         </CListGroupItem>
-        <CListGroupItem className="d-flex justify-content-between mb-3">
+        <CListGroupItem className="d-flex justify-content-between py-3">
           <span>
-            <CIcon icon={icon.cilBuilding} className="mx-2" /> Piso
+            <CIcon icon={icon.cilBuilding} className="me-2 text-body-secondary" /> Piso
           </span>
           <strong>{}</strong>
         </CListGroupItem>
@@ -137,14 +121,14 @@ const DetallesHabitacion = () => {
           <CModalTitle id="ModalEliminarLabel">Eliminar habitación</CModalTitle>
         </CModalHeader>
         <CModalBody>
-          ¿Seguro que deseas eliminar la habitación <strong>#{}</strong>? Esta acción no se
-          puede deshacer.
+          ¿Seguro que deseas eliminar la habitación <strong>#{}</strong>? Esta acción no se puede
+          deshacer.
         </CModalBody>
         <CModalFooter>
           <CButton color="secondary" onClick={() => setModalEliminar(false)}>
             Cancelar
           </CButton>
-          <CButton color="danger" className="text-white" onClick={deleteHabitacion}>
+          <CButton color="danger" onClick={deleteHabitacion}>
             Eliminar
           </CButton>
         </CModalFooter>

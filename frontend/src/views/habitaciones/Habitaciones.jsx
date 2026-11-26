@@ -3,19 +3,18 @@ import { useNavigate } from 'react-router-dom'
 import { CRow, CCol, CContainer, CButton } from '@coreui/react'
 import { CardHabitacion } from './CardHabitacion'
 import CIcon from '@coreui/icons-react'
-import * as icon from '@coreui/icons';
+import * as icon from '@coreui/icons'
 
 const habitaciones = [
-  { id:1, numero: 204, estado: 'Reservado', tipo: 'Business', Tarifa: 3000, capacidad: 6 },
-  { id:2, numero: 205, estado: 'Mantenimiento' },
-  { id:3, numero: 206, estado: 'Ocupada' },
-  { id:4, numero: 207 },
-  { id:5, numero: 208 },
+  { id: 1, numero: 204, estado: 'Reservada', tipo: 'Business', Tarifa: 3000, capacidad: 6 },
+  { id: 2, numero: 205, estado: 'Mantenimiento' },
+  { id: 3, numero: 206, estado: 'Ocupada' },
+  { id: 4, numero: 207 },
+  { id: 5, numero: 208 },
   // ...
 ]
 
 const Habitaciones = () => {
-
   const navigate = useNavigate()
 
   return (
@@ -28,18 +27,27 @@ const Habitaciones = () => {
           </p>
           <CButton
             color="primary"
-            className="text-primary bg-transparent border-2 flex-shrink-0"
-            onClick={()=>{navigate('/panel/habitaciones/form')}}
+            variant="outline"
+            className="flex-shrink-0"
+            onClick={() => {
+              navigate('/panel/habitaciones/form')
+            }}
           >
             <CIcon icon={icon.cilPlus} /> Crear Habitacion
           </CButton>
         </div>
       </CContainer>
       <hr />
-      <CRow xs={{ cols: 1 }} md={{ cols: 2 }} lg={{ cols: 3 }} className='g-4 mb-4 m-auto'>
-        {habitaciones.map(h => (
-          <CCol key={h.numero}>
-            <CardHabitacion id={h.id} numero={h.numero} estado={h.estado} tipo={h.tipo} Capacidad={h.capacidad} />
+      <CRow xs={{ cols: 1 }} md={{ cols: 2 }} lg={{ cols: 3 }} className="g-4 mb-4">
+        {habitaciones.map((h) => (
+          <CCol key={h.id}>
+            <CardHabitacion
+              id={h.id}
+              numero={h.numero}
+              estado={h.estado}
+              tipo={h.tipo}
+              Capacidad={h.capacidad}
+            />
           </CCol>
         ))}
       </CRow>
