@@ -41,6 +41,39 @@ router.post('/',async (req,res)=>{
     }catch(error){
         res.status(500).json({error:'Error al crear la Habitacion'});
     }
+});
+
+router.put('/:id',async (req,res)=>{
+    try{
+        const{Numero_Habitacion,ID_Tipo_Habitacion,ID_Piso,Tipo_Vista,ID_Estado_Habitacion} = req.body;
+        if(!Numero_Habitacion || !ID_Tipo_Habitacion || !ID_Piso ||!Tipo_Vista ||!ID_Estado_Habitacion){
+            return res.status(400).json({error:'Todos los campos son obligatorios'});
+        }
+
+        const[resultado]= await
+        pool.query
+        ('UPDATE Habitaciones SET Numero_Habitacion=?,ID_Tipo_Habitacion=?,ID_Piso=?,Tipo_Vista=?,ID_Estado_Habitacion=? WHERE ID_Habitacion = ?',
+        [Numero_Habitacion,ID_Tipo_Habitacion,ID_Piso,Tipo_Vista,ID_Estado_Habitacion,req.params.id]);
+
+        if(resultado.affectedRows === 0) {
+            return res.status(404).json({ error: 'Habitacion no encontrada' });
+        }
+        res.status(200).json({ mensaje: 'Habitacion actualizada' });
+    }catch(error){
+        res.status(500).json({error:'Error al actualizar la Habitacion'});
+    }
+});
+
+router.delete('/:id',async (req,res)=>{
+    try{
+        const[resultado]= await pool.query('DELETE FROM Habitaciones WHERE ID_Habitacion = ?',[req.params.id]);
+        if(resultado.affectedRows === 0){
+            return res.status(404).json({error:'Habitacion no encontrada'});
+        }
+        res.status(200).json({mensaje: 'Habitacion eliminada' });
+    }catch(error){
+        res.status(500).json({error:"Error al eliminar la Habitacion"});
+    }
 })
 
 module.exports = router;
