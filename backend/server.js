@@ -17,6 +17,7 @@ app.get('/', (req, res) => {
 
 //--- Rutas---
 app.use('/api/habitaciones', require('./routes/habitaciones'));
+app.use('/api/tiposhabitaciones', require('./routes/tiposhabitaciones'));
 
 // --- ENCENDIDO DEL SERVIDOR ---
 app.listen(PORT, () => {

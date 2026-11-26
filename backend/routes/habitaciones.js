@@ -5,10 +5,10 @@ const pool = require('../config/db');
 router.get('/',async (req,res) => {
     try{
         const[filas]=await pool.query('SELECT * FROM Habitaciones');
-        res.json(filas);
+        res.status(200).json(filas);
     }catch (error){
         console.error(error);
-        res.status(500).json({error:'Error al consultas las habitaciones'});
+        res.status(500).json({error:'Error al consultar las habitaciones'});
     }
 });
 
@@ -22,7 +22,7 @@ router.get('/:id',async (req,res)=>{
 
         res.json(filas[0]);
     }catch(error){
-        res.status(500).json({error:'Error al obtener la habitaciones'});
+        res.status(500).json({error:'Error al consultar las habitaciones'});
     }
 });
 
@@ -63,17 +63,5 @@ router.put('/:id',async (req,res)=>{
         res.status(500).json({error:'Error al actualizar la Habitacion'});
     }
 });
-
-router.delete('/:id',async (req,res)=>{
-    try{
-        const[resultado]= await pool.query('DELETE FROM Habitaciones WHERE ID_Habitacion = ?',[req.params.id]);
-        if(resultado.affectedRows === 0){
-            return res.status(404).json({error:'Habitacion no encontrada'});
-        }
-        res.status(200).json({mensaje: 'Habitacion eliminada' });
-    }catch(error){
-        res.status(500).json({error:"Error al eliminar la Habitacion"});
-    }
-})
 
 module.exports = router;
