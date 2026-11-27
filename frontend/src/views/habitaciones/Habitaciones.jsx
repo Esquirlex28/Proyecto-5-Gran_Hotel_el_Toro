@@ -1,21 +1,26 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { CRow, CCol, CContainer, CButton } from '@coreui/react'
 import { CardHabitacion } from './CardHabitacion'
 import CIcon from '@coreui/icons-react'
 import * as icon from '@coreui/icons'
-
-const habitaciones = [
-  { id: 1, numero: 204, estado: 'Reservada', tipo: 'Business', Tarifa: 3000, capacidad: 6 },
-  { id: 2, numero: 205, estado: 'Mantenimiento' },
-  { id: 3, numero: 206, estado: 'Ocupada' },
-  { id: 4, numero: 207 },
-  { id: 5, numero: 208 },
-  // ...
-]
+import { getHabitaciones } from '../../service/api'
 
 const Habitaciones = () => {
+  const [habitaciones, setHabitaciones] = useState([
+    {ID_Habitacion:0, Numero_Habitacion: 0, Tipo_Vista: '', Nombre_Tipo: '', Capacidad_Maxima:0, Tarifa_Base:0, Nombre_Piso:'', Nombre_Estado: ''}
+  ])
   const navigate = useNavigate()
+
+  useEffect(()=>{
+
+    getHabitaciones()
+    .then(res => {
+        setHabitaciones(res)
+        console.log(habitaciones)
+    })
+
+  },[]);
 
   return (
     <>
@@ -40,13 +45,15 @@ const Habitaciones = () => {
       <hr />
       <CRow xs={{ cols: 1 }} md={{ cols: 2 }} lg={{ cols: 3 }} className="g-4 mb-4">
         {habitaciones.map((h) => (
-          <CCol key={h.id}>
+          <CCol key={h.ID_Habitacion}>
             <CardHabitacion
-              id={h.id}
-              numero={h.numero}
-              estado={h.estado}
-              tipo={h.tipo}
-              Capacidad={h.capacidad}
+              ID_Habitacion={h.ID_Habitacion}
+              Numero_Habitacion={h.Numero_Habitacion}
+              Nombre_Estado={h.Nombre_Estado}
+              Nombre_Tipo={h.Nombre_Tipo}
+              Capacidad_Maxima={h.Capacidad_Maxima}
+              Tarifa_Base={h.Tarifa_Base}
+              Nombre_Piso={h.Nombre_Piso}
             />
           </CCol>
         ))}

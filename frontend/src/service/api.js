@@ -39,4 +39,5 @@ export const postClientes = (peticion) => peticionPost('/clientes', peticion);
 export const getEmpleados = () => peticionGet('/empleados');
 export const postEmpleados = (peticion) => peticionPost('/empleados', peticion);
 export const getCargos = () => peticionGet('/cargos');
-export const postUsuarioEmpleado = (peticion) => peticionPost('/auth/empleados/registro', peticion)
+export const postCargos = (peticion) => peticionPost('/cargos', peticion);
+export const postUsuarioEmpleado = (peticion) => peticionPost('/auth/empleados/registro', peticion);

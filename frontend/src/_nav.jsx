@@ -48,6 +48,12 @@ const _nav = [
     to: '/panel/empleados',
     icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
   },
+  {
+    component: CNavItem,
+    name: 'Cargos',
+    to: '/panel/cargos',
+    icon: <CIcon icon={cilTags} customClassName="nav-icon" />,
+  },
 ]
 
 export default _nav

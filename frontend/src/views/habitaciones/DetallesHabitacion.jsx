@@ -15,12 +15,26 @@ import {
 import image from '../../assets/images/habitacion.jpg'
 import CIcon from '@coreui/icons-react'
 import * as icon from '@coreui/icons'
+import { getHabitaciones } from '../../service/api'
 
 const DetallesHabitacion = () => {
   const { id } = useParams()
   const navigate = useNavigate()
   const [modalEliminar, setModalEliminar] = useState(false)
   const [mensaje, setMensaje] = useState(false)
+  const [habitacion, setHabitacion] = useState([
+      {ID_Habitacion:0, Numero_Habitacion: 0, Tipo_Vista: '', Nombre_Tipo: '', Capacidad_Maxima:0, Tarifa_Base:0, Nombre_Piso:'', Nombre_Estado: ''}
+    ])
+    useEffect(()=>{
+  
+      getHabitaciones()
+      .then(res => {
+          const hab = res.filter(h => Number(h.ID_Habitacion) == Number(id))
+          setHabitacion(hab)
+          console.log(hab)
+      })
+  
+    },[]);
 
   useEffect(() => {
     if (!mensaje) return
@@ -58,7 +72,7 @@ const DetallesHabitacion = () => {
           style={{ background: 'linear-gradient(to top, rgba(0,0,0,.65), rgba(0,0,0,0) 55%)' }}
         />
         <h1 className="position-absolute bottom-0 start-0 m-4 h2 text-white">
-          Gestion de la Habitacion #{}
+          Gestion de la Habitacion # {habitacion[0].Numero_Habitacion}
         </h1>
 
         <CButton
@@ -76,11 +90,12 @@ const DetallesHabitacion = () => {
           <CButton
             color="primary"
             variant="outline"
+            disabled
             onClick={() => navigate(`/panel/habitaciones/${id}/editar`)}
           >
             <CIcon icon={icon.cilPencil} className="me-1" /> Modificar
           </CButton>
-          <CButton color="danger" variant="outline" onClick={() => setModalEliminar(true)}>
+          <CButton color="danger" variant="outline" disabled onClick={() => setModalEliminar(true)}>
             <CIcon icon={icon.cilTrash} className="me-1" /> Eliminar
           </CButton>
         </div>
@@ -88,27 +103,39 @@ const DetallesHabitacion = () => {
       <CListGroup className="shadow-sm mb-4">
         <CListGroupItem className="d-flex justify-content-between py-3">
           <span>
+            <CIcon icon={icon.cilTags} className="me-2 text-body-secondary" /> Estado
+          </span>
+          <strong>{habitacion[0].Nombre_Estado}</strong>
+        </CListGroupItem>
+        <CListGroupItem className="d-flex justify-content-between py-3">
+          <span>
             <CIcon icon={icon.cilTags} className="me-2 text-body-secondary" /> Tipo
           </span>
-          <strong>{}</strong>
+          <strong>{habitacion[0].Nombre_Tipo}</strong>
         </CListGroupItem>
         <CListGroupItem className="d-flex justify-content-between py-3">
           <span>
             <CIcon icon={icon.cilPeople} className="me-2 text-body-secondary" /> Capacidad
           </span>
-          <strong>{}</strong>
+          <strong>{habitacion[0].Capacidad_Maxima}</strong>
         </CListGroupItem>
         <CListGroupItem className="d-flex justify-content-between py-3">
           <span>
             <CIcon icon={icon.cilDollar} className="me-2 text-body-secondary" /> Tarifa
           </span>
-          <strong>{}</strong>
+          <strong>{habitacion[0].Tarifa_Base}</strong>
         </CListGroupItem>
         <CListGroupItem className="d-flex justify-content-between py-3">
           <span>
             <CIcon icon={icon.cilBuilding} className="me-2 text-body-secondary" /> Piso
           </span>
-          <strong>{}</strong>
+          <strong>{habitacion[0].Nombre_Piso}</strong>
+        </CListGroupItem>
+        <CListGroupItem className="d-flex justify-content-between py-3">
+          <span>
+            <CIcon icon={icon.cilWindow} className="me-2 text-body-secondary" /> Vistas
+          </span>
+          <strong>{habitacion[0].Tipo_Vista}</strong>
         </CListGroupItem>
       </CListGroup>
       <CModal

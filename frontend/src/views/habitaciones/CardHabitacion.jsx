@@ -22,13 +22,14 @@ const coloresEstado = {
 }
 
 export const CardHabitacion = ({
-  id,
-  numero = 100,
-  estado = 'Disponible',
-  tipo = 'Normal',
-  Capacidad = 4,
-  Tarifa = 1500,
-  piso = 1,
+  ID_Habitacion = 0,
+  Numero_Habitacion = 0,
+  Tipo_Vista = '',
+  Nombre_Tipo = '',
+  Capacidad_Maxima = 0,
+  Tarifa_Base = 0,
+  Nombre_Piso = '',
+  Nombre_Estado = '',
 }) => {
   const navigate = useNavigate()
   return (
@@ -37,49 +38,49 @@ export const CardHabitacion = ({
         <CCardImage
           orientation="top"
           src={habitacionImage}
-          alt={`Habitación ${numero}`}
+          alt={`Habitación ${Numero_Habitacion}`}
           className="object-fit-cover"
           style={{ height: '12rem' }}
         />
         <CBadge
-          color={coloresEstado[estado] ?? 'secondary'}
+          color={coloresEstado[Nombre_Estado] ?? 'secondary'}
           className="position-absolute top-0 start-0 m-2 px-3 py-2"
         >
-          {estado}
+          {Nombre_Estado}
         </CBadge>
       </div>
       <CCardBody>
-        <CCardTitle>Habitación #{numero}</CCardTitle>
+        <CCardTitle>Habitación #{Numero_Habitacion}</CCardTitle>
         <CListGroup flush>
           <CListGroupItem className="d-flex justify-content-between px-0">
             <span>
               <CIcon icon={cilTags} className="me-2 text-body-secondary" /> Tipo
             </span>
-            <strong>{tipo}</strong>
+            <strong>{Nombre_Tipo}</strong>
           </CListGroupItem>
           <CListGroupItem className="d-flex justify-content-between px-0">
             <span>
               <CIcon icon={cilPeople} className="me-2 text-body-secondary" /> Capacidad
             </span>
-            <strong>{Capacidad}</strong>
+            <strong>{Capacidad_Maxima}</strong>
           </CListGroupItem>
           <CListGroupItem className="d-flex justify-content-between px-0">
             <span>
               <CIcon icon={cilDollar} className="me-2 text-body-secondary" /> Tarifa
             </span>
-            <strong>{Tarifa}</strong>
+            <strong>{Tarifa_Base}</strong>
           </CListGroupItem>
           <CListGroupItem className="d-flex justify-content-between px-0">
             <span>
               <CIcon icon={cilBuilding} className="me-2 text-body-secondary" /> Piso
             </span>
-            <strong>{piso}</strong>
+            <strong>{Nombre_Piso}</strong>
           </CListGroupItem>
         </CListGroup>
         <CButton
           className="w-100 mt-3"
           color="primary"
-          onClick={() => navigate(`/panel/habitaciones/${id}`)}
+          onClick={() => navigate(`/panel/habitaciones/${ID_Habitacion}`)}
         >
           Gestionar Habitacion
         </CButton>

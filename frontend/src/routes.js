@@ -14,6 +14,8 @@ const Clientes = React.lazy(() => import('./views/clientes/Clientes'))
 const FormClientes = React.lazy(() => import('./views/clientes/FormClientes'))
 const Empleados = React.lazy(() => import('./views/empleados/Empleados'))
 const FormEmpleados = React.lazy(() => import('./views/empleados/FormEmpleados'))
+const Cargo = React.lazy(() => import('./views/cargos/Cargo'))
+const FormCargo = React.lazy(() => import('./views/cargos/FormCargo'))
 
 
 const routes = [
@@ -35,6 +37,8 @@ const routes = [
   { path: '/panel/clientes/form', exact: true, name: 'Formulario', element: FormClientes },
   { path: '/panel/empleados', exact: true, name: 'Empleados', element: Empleados },
   { path: '/panel/empleados/form', exact: true, name: 'Formulario', element: FormEmpleados },
+  { path: '/panel/cargos', exact: true, name: 'Cargos', element: Cargo },
+  { path: '/panel/cargos/form', exact: true, name: 'Formulario', element: FormCargo },
 ]
 
 export { routes }

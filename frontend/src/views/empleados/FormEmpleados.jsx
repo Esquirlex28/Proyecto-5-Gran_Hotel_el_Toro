@@ -87,19 +87,8 @@ const FormEmpleados = () => {
           setError(res.mensaje || 'No se pudo guardar el empleado')
           return
         }
-        // Con el ID del empleado recien creado se registran sus credenciales
-        return postUsuarioEmpleado({ ID_Empleado: res.id_empleado, Usuario, Password }).then(
-          (resUsuario) => {
-            if (!resUsuario.ok) {
-              setError(
-                `Empleado creado, pero no se pudo crear su usuario: ${resUsuario.mensaje || 'error desconocido'}`,
-              )
-              return
-            }
-            setMensaje(true)
-            setTimeout(() => navigate('/panel/empleados'), 2000)
-          },
-        )
+        setMensaje(true)
+        setTimeout(() => navigate('/panel/empleados'), 2000)
       })
       .catch((e) => {
         console.error(e)
