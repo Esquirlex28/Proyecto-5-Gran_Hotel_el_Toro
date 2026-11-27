@@ -125,7 +125,7 @@ CREATE TABLE Usuarios_Empleado (
     ID_Empleado INT NOT NULL UNIQUE,
     Usuario VARCHAR(50) NOT NULL UNIQUE,
     Contraseña_Hash VARCHAR(500) NOT NULL,
-    Estado INT NOT NULL,
+    Estado INT NOT NULL DEFAULT 1,
     CONSTRAINT FK_Usuario_Empleado FOREIGN KEY (ID_Empleado) REFERENCES Empleados(ID_Empleado)
 ) ENGINE=InnoDB;
 
@@ -230,6 +230,7 @@ CREATE TABLE Consumos_Huesped (
     Cantidad_Consumo INT NOT NULL,
     Precio_Unitario DECIMAL(10,2) NOT NULL,
     Total_Consumo  DECIMAL(10,2) NOT NULL,
+    Estado INT NOT NULL,
     CONSTRAINT FK_Consumo_Estancia FOREIGN KEY (ID_Estancia) REFERENCES Estancias(ID_Estancia),
     CONSTRAINT FK_Consumo_Servicio FOREIGN KEY (ID_Servicio_Adicional) REFERENCES Servicios_Adicionales(ID_Servicio_Adicional),
     CONSTRAINT FK_Consumo_Empleado FOREIGN KEY (ID_Empleado) REFERENCES Empleados(ID_Empleado),
@@ -249,11 +250,12 @@ CREATE TABLE Facturas_Fiscales (
     Fecha_Emision DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     Subtotal DECIMAL(10,2) NOT NULL,
     Descuentos DECIMAL(10,2) NOT NULL DEFAULT 0.00,
-    Impuestos DECIMAL(10,2) NOT NULL,
+    ISV DECIMAL(10,2) NOT NULL,
+    Impuesto_Turismo DECIMAL(10,2) NOT NULL DEFAULT 0.00,
     Total DECIMAL(10,2) NOT NULL,
     CONSTRAINT FK_Factura_Estancia FOREIGN KEY (ID_Estancia) REFERENCES Estancias(ID_Estancia),
     CONSTRAINT CK_Factura_Montos CHECK (
-        Subtotal >= 0 AND Descuentos >= 0 AND Impuestos >= 0 AND Total >= 0
+        Subtotal >= 0 AND Descuentos >= 0 AND ISV >= 0 AND Impuesto_Turismo >= 0 AND Total >= 0
     )
 ) ENGINE=InnoDB;
 
@@ -269,6 +271,7 @@ CREATE TABLE Detalles_Factura (
     Subtotal DECIMAL(10,2) NOT NULL,
     Descuentos DECIMAL(10,2) NOT NULL DEFAULT 0.00,
     ISV DECIMAL(10,2) NOT NULL,
+    Impuesto_Turismo DECIMAL(10,2) NOT NULL DEFAULT 0.00,
     Total DECIMAL(10,2) NOT NULL,
     CONSTRAINT FK_DetalleFactura_Factura FOREIGN KEY (ID_Factura) REFERENCES Facturas_Fiscales(ID_Factura),
     CONSTRAINT FK_DetalleFactura_Estancia FOREIGN KEY (ID_Estancia) REFERENCES Estancias(ID_Estancia),
