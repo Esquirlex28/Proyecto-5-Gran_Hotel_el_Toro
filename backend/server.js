@@ -16,8 +16,12 @@ app.get('/', (req, res) => {
 });
 
 //--- Rutas---
-app.use('/api/habitaciones', require('./routes/habitaciones'));
-app.use('/api/tiposhabitaciones', require('./routes/tiposhabitaciones'));
+app.use('/api/habitaciones', require('./routes/habitaciones.routes'));
+app.use('/api/tiposhabitaciones', require('./routes/tiposhabitaciones.routes'));
+app.use('/api/pisos', require('./routes/pisos.routes'));
+app.use('/api/estadoshabitacion', require('./routes/estadoshabitacion.routes'));
+app.use('/api/comodidades', require('./routes/comodidades.routes'));
+app.use('/api/tipohabitacioncomodidades', require('./routes/tipohabitacioncomodidades.routes'));
 
 // --- ENCENDIDO DEL SERVIDOR ---
 app.listen(PORT, () => {
