@@ -36,3 +36,7 @@ export const getPaises = () => peticionGet('/paises');
 export const postPais = (peticion) => peticionPost('/paises', peticion);
 export const getClientes = () => peticionGet('/clientes');
 export const postClientes = (peticion) => peticionPost('/clientes', peticion);
+export const getEmpleados = () => peticionGet('/empleados');
+export const postEmpleados = (peticion) => peticionPost('/empleados', peticion);
+export const getCargos = () => peticionGet('/cargos');
+export const postUsuarioEmpleado = (peticion) => peticionPost('/auth/empleados/registro', peticion)
