@@ -41,3 +41,7 @@ export const postEmpleados = (peticion) => peticionPost('/empleados', peticion);
 export const getCargos = () => peticionGet('/cargos');
 export const postCargos = (peticion) => peticionPost('/cargos', peticion);
 export const postUsuarioEmpleado = (peticion) => peticionPost('/auth/empleados/registro', peticion);
+export const postHabitacion = (peticion) => peticionPost('/habitaciones', peticion);
+export const getTiposHabitacion = () => peticionGet('/tiposhabitaciones');
+export const getPisos = () => peticionGet('/pisos');
+export const getEstadosHabitacion = () => peticionGet('/estadoshabitacion');

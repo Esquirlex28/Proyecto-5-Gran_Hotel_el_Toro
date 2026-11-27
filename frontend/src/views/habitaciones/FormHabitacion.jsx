@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import {
   CCard,
@@ -12,25 +12,12 @@ import {
   CButton,
   CAlert,
 } from '@coreui/react'
-
-const tipoHabitacion = [
-  { id: 1, nombre: 'Normal' },
-  { id: 2, nombre: 'Business' },
-  { id: 3, nombre: 'Suite' },
-]
-
-const pisoHabitacion = [
-  { id: 1, nombre: 'Piso 1' },
-  { id: 2, nombre: 'Piso 2' },
-  { id: 3, nombre: 'Piso 3' },
-]
-
-const estadoHabitacion = [
-  { id: 1, nombre: 'Disponible' },
-  { id: 2, nombre: 'Ocupada' },
-  { id: 3, nombre: 'Mantenimiento' },
-  { id: 4, nombre: 'Reservada' },
-]
+import {
+  postHabitacion,
+  getTiposHabitacion,
+  getPisos,
+  getEstadosHabitacion,
+} from '../../service/api'
 
 const FormHabitacion = () => {
   const navigate = useNavigate()
@@ -39,11 +26,26 @@ const FormHabitacion = () => {
   const rutaRegreso = esEdicion ? `/panel/habitaciones/${id}` : '/panel/habitaciones'
 
   const [mensaje, setMensaje] = useState(false)
-  const [habitacion, setHabitacion] = useState(
-    esEdicion
-      ? { numero: Number(id), tipo: 1, tipoVistas: '', piso: 1, estado: 1 }
-      : { numero: '', tipo: '', tipoVistas: '', piso: '', estado: '' },
-  )
+  const [error, setError] = useState('')
+  const [tiposHabitacion, setTiposHabitacion] = useState([])
+  const [pisos, setPisos] = useState([])
+  const [estadosHabitacion, setEstadosHabitacion] = useState([])
+  const [habitacion, setHabitacion] = useState({
+    Numero_Habitacion: esEdicion ? Number(id) : '',
+    ID_Tipo_Habitacion: '',
+    Tipo_Vista: '',
+    ID_Piso: '',
+    ID_Estado_Habitacion: '',
+  })
+
+  useEffect(() => {
+    getEstadosHabitacion()
+    .then(res=> setEstadosHabitacion(res));
+    getTiposHabitacion()
+    .then(res => setTiposHabitacion(res));
+    getPisos()
+    .then(res => setPisos(res))
+  }, [])
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -52,10 +54,35 @@ const FormHabitacion = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    console.log(esEdicion ? 'Mandando peticion de actualizacion' : 'Mandando peticion de creacion')
-    console.log(habitacion)
-    setMensaje(true)
-    setTimeout(() => navigate(rutaRegreso), 2000)
+    setError('')
+
+    if (esEdicion) {
+      // TODO: conectar la edicion al backend
+      console.log('Mandando peticion de actualizacion', habitacion)
+      setMensaje(true)
+      setTimeout(() => navigate(rutaRegreso), 2000)
+      return
+    }
+
+    postHabitacion({
+      Numero_Habitacion: Number(habitacion.Numero_Habitacion),
+      ID_Tipo_Habitacion: Number(habitacion.ID_Tipo_Habitacion),
+      ID_Piso: Number(habitacion.ID_Piso),
+      Tipo_Vista: habitacion.Tipo_Vista.trim(),
+      ID_Estado_Habitacion: Number(habitacion.ID_Estado_Habitacion),
+    })
+      .then((res) => {
+        if (res.error) {
+          setError(res.error)
+          return
+        }
+        setMensaje(true)
+        setTimeout(() => navigate(rutaRegreso), 2000)
+      })
+      .catch((e) => {
+        console.error(e)
+        setError('No se pudo conectar con el servidor')
+      })
   }
 
   return (
@@ -63,6 +90,11 @@ const FormHabitacion = () => {
       {mensaje && (
         <CAlert color="success" className="text-center shadow-sm">
           ¡Habitacion {esEdicion ? 'actualizada' : 'creada'} con exito!
+        </CAlert>
+      )}
+      {error && (
+        <CAlert color="danger" className="text-center shadow-sm">
+          {error}
         </CAlert>
       )}
       <CCard className="shadow-sm mb-4">
@@ -74,30 +106,30 @@ const FormHabitacion = () => {
               <CCol md={6} className="mb-4">
                 <CFormInput
                   type="number"
-                  name="numero"
+                  name="Numero_Habitacion"
                   label="Numero de Habitacion"
                   placeholder="204"
                   min={100}
                   max={999}
                   required
-                  value={habitacion.numero}
+                  value={habitacion.Numero_Habitacion}
                   onChange={handleChange}
                 />
               </CCol>
               <CCol md={6} className="mb-4">
                 <CFormSelect
                   label="Tipo de Habitacion"
-                  name="tipo"
+                  name="ID_Tipo_Habitacion"
                   required
-                  value={habitacion.tipo}
+                  value={habitacion.ID_Tipo_Habitacion}
                   onChange={handleChange}
                 >
                   <option value="" disabled>
                     Tipo de Habitacion
                   </option>
-                  {tipoHabitacion.map((th) => (
-                    <option key={th.id} value={th.id}>
-                      {th.nombre}
+                  {tiposHabitacion.map((th) => (
+                    <option key={th.ID_Tipo_Habitacion} value={th.ID_Tipo_Habitacion}>
+                      {th.Nombre_Tipo}
                     </option>
                   ))}
                 </CFormSelect>
@@ -107,25 +139,27 @@ const FormHabitacion = () => {
               label="Tipo de Vistas"
               rows={5}
               text="Descripcion de las vistas en 15-20 palabras."
-              name="tipoVistas"
-              value={habitacion.tipoVistas}
+              name="Tipo_Vista"
+              maxLength={500}
+              required
+              value={habitacion.Tipo_Vista}
               onChange={handleChange}
             />
             <CRow className="mt-4">
               <CCol md={6} className="mb-4">
                 <CFormSelect
                   label="Piso de la Habitacion"
-                  name="piso"
+                  name="ID_Piso"
                   required
-                  value={habitacion.piso}
+                  value={habitacion.ID_Piso}
                   onChange={handleChange}
                 >
                   <option value="" disabled>
                     Piso
                   </option>
-                  {pisoHabitacion.map((ph) => (
-                    <option key={ph.id} value={ph.id}>
-                      {ph.nombre}
+                  {pisos.map((ph) => (
+                    <option key={ph.ID_Piso} value={ph.ID_Piso}>
+                      {ph.Nombre_Piso}
                     </option>
                   ))}
                 </CFormSelect>
@@ -133,17 +167,17 @@ const FormHabitacion = () => {
               <CCol md={6} className="mb-4">
                 <CFormSelect
                   label="Estado de la Habitacion"
-                  name="estado"
+                  name="ID_Estado_Habitacion"
                   required
-                  value={habitacion.estado}
+                  value={habitacion.ID_Estado_Habitacion}
                   onChange={handleChange}
                 >
                   <option value="" disabled>
                     Estado
                   </option>
-                  {estadoHabitacion.map((eh) => (
-                    <option key={eh.id} value={eh.id}>
-                      {eh.nombre}
+                  {estadosHabitacion.map((eh) => (
+                    <option key={eh.ID_Estado_Habitacion} value={eh.ID_Estado_Habitacion}>
+                      {eh.Nombre_Estado}
                     </option>
                   ))}
                 </CFormSelect>
@@ -158,7 +192,7 @@ const FormHabitacion = () => {
               >
                 Cancelar
               </CButton>
-              <CButton color="primary" type="submit">
+              <CButton color="primary" type="submit" disabled={mensaje}>
                 Guardar
               </CButton>
             </div>
