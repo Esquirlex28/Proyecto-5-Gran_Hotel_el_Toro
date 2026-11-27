@@ -1,9 +1,8 @@
--- Vistas e índices que usa el frontend
+-- Vistas e índices de la base del hotel
 USE GranHotelElToro;
--- PARTE 1: VISTAS
--- V1. Catálogo de habitaciones
--- Pantallas: 2.1 Administración de habitaciones, catálogo de la zona cliente,
--- base de la búsqueda de disponibilidad (C3 y C4)
+
+-- Catálogo de habitaciones con su tipo, piso, tarifa, estado y comodidades.
+-- Sirve para administrar habitaciones, mostrar el catálogo al cliente y buscar disponibilidad.
 CREATE OR REPLACE VIEW v_catalogo_habitaciones AS
 SELECT
     h.ID_Habitacion,
@@ -29,8 +28,8 @@ GROUP BY
     h.Tipo_Vista, e.ID_Estado_Habitacion, e.Nombre_Estado;
 
 
--- V2. Estado de habitaciones (rack por piso y tablero de camareras)
--- Pantallas: 3.1 Rack visual, 7.1 Tablero de gobernanta, 5.1 elegir habitación ocupada
+-- Estado actual de cada habitación, su color y el huésped que la ocupa.
+-- Sirve para el rack por piso, el tablero de limpieza y elegir habitaciones ocupadas para cargar consumos.
 CREATE OR REPLACE VIEW v_estado_habitaciones AS
 SELECT
     p.ID_Piso,
@@ -40,7 +39,7 @@ SELECT
     t.Nombre_Tipo,
     e.ID_Estado_Habitacion,
     e.Nombre_Estado,
--- Para que identifiquen los estados en el fronted esta biuen haci si no me dicen DarckDbz 
+-- Color del rack según el estado
     CASE e.Nombre_Estado
         WHEN 'Disponible' THEN 'Verde'
         WHEN 'Ocupada' THEN 'Azul'
@@ -67,8 +66,8 @@ FROM Habitaciones h
     LEFT JOIN Reservaciones r ON r.ID_Reservacion = es.ID_Reservacion;
 
 
--- V3. Reservaciones con su detalle
--- Pantallas: "Mis reservaciones" (zona cliente), 4.1 llegadas del día en recepción
+-- Reservaciones con huésped, habitación, noches, monto y estado en texto.
+-- Sirve para que el cliente vea sus reservaciones y para las llegadas del día en recepción.
 CREATE OR REPLACE VIEW v_reservaciones_detalle AS
 SELECT
     r.ID_Reservacion,
@@ -99,9 +98,8 @@ FROM Reservaciones r
     INNER JOIN Tipos_Habitacion t ON t.ID_Tipo_Habitacion = h.ID_Tipo_Habitacion;
 
 
--- V4. Estado de cuenta en vivo de las habitaciones ocupadas
--- (hospedaje devengado hasta hoy + consumos todavía no facturados)
--- Pantalla: 6.1 Check-out y liquidación de cuenta
+-- Estado de cuenta de las habitaciones ocupadas: hospedaje hasta hoy más consumos sin facturar.
+-- Sirve para el check-out y la liquidación de la cuenta.
 CREATE OR REPLACE VIEW v_estado_cuenta AS
 SELECT
     b.*,
@@ -138,8 +136,8 @@ FROM (
 ) b;
 
 
--- V5. Facturas emitidas (encabezado)
--- Pantallas: 6.2 Encabezado de la factura SAR, 5.2 Historial de facturas, factura del cliente
+-- Encabezado de cada factura con los datos SAR, el cliente, los impuestos y los métodos de pago.
+-- Sirve para mostrar la factura y el historial de facturas.
 CREATE OR REPLACE VIEW v_facturas_emitidas AS
 SELECT
     f.ID_Factura,
@@ -170,8 +168,8 @@ FROM Facturas_Fiscales f
     INNER JOIN Habitaciones h ON h.ID_Habitacion = es.ID_Habitacion;
 
 
--- V6. Líneas de cada factura
--- Pantalla: 6.2 Cuerpo de la factura SAR (debajo del encabezado de V5)
+-- Líneas de cada factura: alojamiento y consumos con su ISV e impuesto turístico.
+-- Sirve para el detalle de la factura.
 CREATE OR REPLACE VIEW v_factura_detalle AS
 SELECT
     d.ID_Factura,
@@ -194,8 +192,8 @@ FROM Detalles_Factura d
     LEFT JOIN Categorias_Servicios cat ON cat.ID_Categoria_Servicio = s.ID_Categoria;
 
 
--- V7. Ingresos por mes: hospedaje contra servicios
--- Pantalla: 8.1 Dashboard gerencial
+-- Ingresos por mes separados en hospedaje y servicios.
+-- Sirve para las estadísticas del dashboard.
 CREATE OR REPLACE VIEW v_ingresos_mensuales AS
 SELECT
     DATE_FORMAT(f.Fecha_Emision, '%Y-%m') AS Mes,
@@ -211,13 +209,15 @@ FROM Facturas_Fiscales f
     INNER JOIN Detalles_Factura d ON d.ID_Factura = f.ID_Factura
 GROUP BY DATE_FORMAT(f.Fecha_Emision, '%Y-%m');
 
--- PARTE 2: ÍNDICES DE OPTIMIZACIÓN 
+-- Índices (se crean una sola vez)
+
+-- Búsqueda de estancias por habitación y fechas
 CREATE INDEX IX_Estancias_Habitacion_Fechas ON Estancias (ID_Habitacion, Fecha_Entrada, Fecha_Salida);
 
--- Cruce de fechas en el motor de reservas (C3 y C4)
+-- Revisar si las fechas de una reservación chocan con otra
 CREATE INDEX IX_Reservaciones_Fechas_Estado ON Reservaciones (Fecha_Entrada_Esperada, Fecha_Salida_Esperada, Estado);
 
--- Historial de facturas por fecha (C12) e ingresos por mes (V7)
+-- Buscar facturas por fecha
 CREATE INDEX IX_Facturas_Fecha_Emision ON Facturas_Fiscales (Fecha_Emision);
 
 
