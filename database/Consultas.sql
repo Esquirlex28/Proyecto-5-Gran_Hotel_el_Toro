@@ -68,10 +68,6 @@ VALUES (?, ?, ?, ?, 1);
 INSERT INTO Detalle_Reservacion (ID_Habitacion, ID_Reservacion)
 VALUES (?, LAST_INSERT_ID());
 
--- Anticipo
-INSERT INTO Anticipos_Reservacion (ID_Reservacion, ID_Metodo_Pago, Monto)
-VALUES (?, ?, ?);
-
 -- Reservaciones de un cliente o llegadas de hoy
 SELECT * FROM v_reservaciones_detalle WHERE ID_Huesped = ?;
 SELECT * FROM v_reservaciones_detalle WHERE Fecha_Entrada_Esperada = CURDATE() AND Estado = 1;
