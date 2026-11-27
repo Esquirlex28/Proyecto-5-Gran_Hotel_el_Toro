@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   CContainer,
@@ -19,24 +19,25 @@ import {
 import CIcon from '@coreui/icons-react'
 import * as icon from '@coreui/icons'
 
-const tiposPorDefecto = [
-  { ID_Tipo_Habitacion: 1, Nombre_Tipo: 'Normal', Capacidad_Maxima: 2, Tarifa_Base: 850.0 },
-  { ID_Tipo_Habitacion: 2, Nombre_Tipo: 'Doble', Capacidad_Maxima: 4, Tarifa_Base: 1200.0 },
-  { ID_Tipo_Habitacion: 3, Nombre_Tipo: 'Business', Capacidad_Maxima: 2, Tarifa_Base: 1800.0 },
-  { ID_Tipo_Habitacion: 4, Nombre_Tipo: 'Suite', Capacidad_Maxima: 4, Tarifa_Base: 3500.0 },
-  {
-    ID_Tipo_Habitacion: 5,
-    Nombre_Tipo: 'Suite Presidencial',
-    Capacidad_Maxima: 6,
-    Tarifa_Base: 7500.0,
-  },
-]
+import { getTiposHabitacion, getComodidadesPorTipo } from '../../service/api'
 
 const TipoHabitacion = () => {
   const navigate = useNavigate()
-  const [tipos, setTipos] = useState(tiposPorDefecto)
+  const [tipos, setTipos] = useState([])
   const [tipoEliminar, setTipoEliminar] = useState(null)
   const [mensaje, setMensaje] = useState(false)
+  const [tipoComodidades, setTipoComodidades] = useState(null)
+  const [comodidades, setComodidades] = useState([])
+
+  useEffect(() => {
+    getTiposHabitacion().then((res) => setTipos(Array.isArray(res) ? res : []))
+  }, [])
+
+  const verComodidades = (tipo) => {
+    setTipoComodidades(tipo)
+    setComodidades([])
+    getComodidadesPorTipo(tipo.ID_Tipo_Habitacion).then((res) => setComodidades(Array.isArray(res) ? res : []))
+  }
 
   const deleteTipo = () => {
     console.log('Mandando peticion de eliminacion', tipoEliminar)
@@ -97,12 +98,22 @@ const TipoHabitacion = () => {
                   <CIcon icon={icon.cilDollar} className="me-2" />
                   {Number(t.Tarifa_Base).toFixed(2)}
                 </CTableDataCell>
-                <CTableDataCell className="text-center">
+                <CTableDataCell className="text-center text-nowrap">
+                  <CButton
+                    color="info"
+                    size="sm"
+                    variant="outline"
+                    className="me-2"
+                    onClick={() => verComodidades(t)}
+                  >
+                    <CIcon icon={icon.cilStar} /> Comodidades
+                  </CButton>
                   <CButton
                     color="primary"
                     size="sm"
                     variant="outline"
                     className="me-2"
+                    disabled
                     onClick={() => navigate(`/panel/tipohabitacion/${t.ID_Tipo_Habitacion}/editar`)}
                   >
                     <CIcon icon={icon.cilReload} /> Modificar
@@ -111,6 +122,7 @@ const TipoHabitacion = () => {
                     color="danger"
                     size="sm"
                     variant="outline"
+                    disabled
                     onClick={() => setTipoEliminar(t)}
                   >
                     <CIcon icon={icon.cilDelete} /> Eliminar
@@ -140,6 +152,55 @@ const TipoHabitacion = () => {
           </CButton>
           <CButton color="danger" onClick={deleteTipo}>
             Eliminar
+          </CButton>
+        </CModalFooter>
+      </CModal>
+      <CModal
+        size="lg"
+        visible={tipoComodidades !== null}
+        onClose={() => setTipoComodidades(null)}
+        alignment="center"
+        aria-labelledby="ModalComodidadesTipoLabel"
+      >
+        <CModalHeader>
+          <CModalTitle id="ModalComodidadesTipoLabel">
+            Comodidades de {tipoComodidades?.Nombre_Tipo}
+          </CModalTitle>
+        </CModalHeader>
+        <CModalBody>
+          <CTable hover responsive align="middle" className="mb-0">
+            <CTableHead>
+              <CTableRow>
+                <CTableHeaderCell>Comodidad</CTableHeaderCell>
+                <CTableHeaderCell>Observaciones</CTableHeaderCell>
+              </CTableRow>
+            </CTableHead>
+            <CTableBody>
+              {comodidades.map((c) => (
+                <CTableRow key={c.ID_Tipo_Habitacion_Comodidad}>
+                  <CTableDataCell>
+                    <CIcon icon={icon.cilStar} className="me-2" />
+                    <strong>{c.Nombre_Comodidad}</strong>
+                  </CTableDataCell>
+                  <CTableDataCell className="text-body-secondary">
+                    {c.Observaciones || '—'}
+                  </CTableDataCell>
+                </CTableRow>
+              ))}
+            </CTableBody>
+          </CTable>
+          {comodidades.length === 0 && (
+            <p className="text-body-secondary text-center mt-3 mb-0">
+              Este tipo no tiene comodidades asignadas
+            </p>
+          )}
+        </CModalBody>
+        <CModalFooter>
+          <CButton color="primary" variant="outline" disabled>
+            <CIcon icon={icon.cilPlus} /> Asignar Comodidad
+          </CButton>
+          <CButton color="secondary" onClick={() => setTipoComodidades(null)}>
+            Cerrar
           </CButton>
         </CModalFooter>
       </CModal>

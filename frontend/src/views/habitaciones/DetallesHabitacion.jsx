@@ -29,18 +29,16 @@ const DetallesHabitacion = () => {
   
       getHabitaciones()
       .then(res => {
-          const hab = res.filter(h => Number(h.ID_Habitacion) == Number(id))
+          const lista = Array.isArray(res) ? res : []
+          const hab = lista.filter(h => Number(h.ID_Habitacion) === Number(id))
+          if (hab.length === 0) {
+            navigate('/panel/habitaciones')
+            return
+          }
           setHabitacion(hab)
-          console.log(hab)
       })
   
-    },[]);
-
-  useEffect(() => {
-    if (!mensaje) return
-    const t = setTimeout(() => navigate(`/panel/habitaciones/${id}`), 2000)
-    return () => clearTimeout(t)
-  }, [mensaje])
+    }, [id, navigate])
 
   const deleteHabitacion = (e) => {
     e.preventDefault()
@@ -59,7 +57,7 @@ const DetallesHabitacion = () => {
       )}
       <div
         className="position-relative overflow-hidden rounded-3 shadow mb-4"
-        style={{ height: 'clamp(14rem, 45vh, 26rem)' }}
+        style={{ height: '22rem' }}
       >
         <img
           src={image}
@@ -148,7 +146,7 @@ const DetallesHabitacion = () => {
           <CModalTitle id="ModalEliminarLabel">Eliminar habitación</CModalTitle>
         </CModalHeader>
         <CModalBody>
-          ¿Seguro que deseas eliminar la habitación <strong>#{}</strong>? Esta acción no se puede
+          ¿Seguro que deseas eliminar la habitación <strong>#{habitacion[0].Numero_Habitacion}</strong>? Esta acción no se puede
           deshacer.
         </CModalBody>
         <CModalFooter>

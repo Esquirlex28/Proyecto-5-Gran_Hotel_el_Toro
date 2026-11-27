@@ -47,7 +47,7 @@ const FormCargo = () => {
           return
         }
         setMensaje(true)
-        setTimeout(() => navigate('/panel/carg'), 2000)
+        setTimeout(() => navigate('/panel/cargos'), 2000)
       })
       .catch((e) => {
         console.error(e)
@@ -114,7 +114,7 @@ const FormCargo = () => {
               >
                 Cancelar
               </CButton>
-              <CButton color="primary" type="submit">
+              <CButton color="primary" type="submit" disabled={mensaje}>
                 Guardar
               </CButton>
             </div>

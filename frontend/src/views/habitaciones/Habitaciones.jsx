@@ -7,17 +7,14 @@ import * as icon from '@coreui/icons'
 import { getHabitaciones } from '../../service/api'
 
 const Habitaciones = () => {
-  const [habitaciones, setHabitaciones] = useState([
-    {ID_Habitacion:0, Numero_Habitacion: 0, Tipo_Vista: '', Nombre_Tipo: '', Capacidad_Maxima:0, Tarifa_Base:0, Nombre_Piso:'', Nombre_Estado: ''}
-  ])
+  const [habitaciones, setHabitaciones] = useState([])
   const navigate = useNavigate()
 
   useEffect(()=>{
 
     getHabitaciones()
     .then(res => {
-        setHabitaciones(res)
-        console.log(habitaciones)
+        setHabitaciones(Array.isArray(res) ? res : [])
     })
 
   },[]);

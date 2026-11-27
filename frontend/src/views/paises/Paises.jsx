@@ -21,7 +21,7 @@ import CIcon from '@coreui/icons-react'
 import * as icon from '@coreui/icons'
 import { getPaises } from '../../service/api'
 
-const Pisos = () => {
+const Paises = () => {
   const navigate = useNavigate()
   const [paises, setPaises] = useState([])
   const [paisEliminar, setPaisEliminar] = useState(null)
@@ -36,7 +36,7 @@ const Pisos = () => {
     })
   }, [])
 
-  const deletePiso = () => {
+  const deletePais = () => {
     console.log('Mandando peticion de eliminacion', paisEliminar)
     // Peticion para eliminar el pais
     setPaisEliminar(null)
@@ -125,10 +125,10 @@ const Pisos = () => {
         visible={paisEliminar !== null}
         onClose={() => setPaisEliminar(null)}
         alignment="center"
-        aria-labelledby="ModalEliminarPisoLabel"
+        aria-labelledby="ModalEliminarPaisLabel"
       >
         <CModalHeader>
-          <CModalTitle id="ModalEliminarPisoLabel">Eliminar piso</CModalTitle>
+          <CModalTitle id="ModalEliminarPaisLabel">Eliminar pais</CModalTitle>
         </CModalHeader>
         <CModalBody>
           ¿Seguro que deseas eliminar el pais <strong>{paisEliminar?.Nombre_Pais}</strong>? Esta
@@ -138,7 +138,7 @@ const Pisos = () => {
           <CButton color="secondary" onClick={() => setPaisEliminar(null)}>
             Cancelar
           </CButton>
-          <CButton color="danger" onClick={deletePiso}>
+          <CButton color="danger" onClick={deletePais}>
             Eliminar
           </CButton>
         </CModalFooter>
@@ -147,4 +147,4 @@ const Pisos = () => {
   )
 }
 
-export default Pisos
+export default Paises

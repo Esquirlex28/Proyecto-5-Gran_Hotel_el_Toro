@@ -293,7 +293,7 @@ const FormEmpleados = () => {
               >
                 Cancelar
               </CButton>
-              <CButton color="primary" type="submit">
+              <CButton color="primary" type="submit" disabled={mensaje}>
                 Guardar
               </CButton>
             </div>

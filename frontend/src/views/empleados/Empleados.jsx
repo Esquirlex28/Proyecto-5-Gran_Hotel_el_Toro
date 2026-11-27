@@ -72,7 +72,7 @@ const Empleados = () => {
             color="primary"
             variant="outline"
             className="flex-shrink-0"
-            onClick={() => navigate('/panel/Empleados/form')}
+            onClick={() => navigate('/panel/empleados/form')}
           >
             <CIcon icon={icon.cilPlus} /> Crear Empleado
           </CButton>
@@ -85,7 +85,7 @@ const Empleados = () => {
       )}
 
       {empleados.map((e) => (
-        <CCard key={e.ID_Huesped} className="shadow-sm mb-3">
+        <CCard key={e.ID_Empleado} className="shadow-sm mb-3">
           <CCardBody>
             <CRow className="align-items-center g-3">
               <CCol xs="auto">
@@ -141,7 +141,7 @@ const Empleados = () => {
                   variant="outline"
                   className="me-2"
                   disabled
-                  onClick={() => navigate(`/panel/Empleados/${e.ID_Empleado}/editar`)}
+                  onClick={() => navigate(`/panel/empleados/${e.ID_Empleado}/editar`)}
                 >
                   <CIcon icon={icon.cilReload} /> Modificar
                 </CButton>

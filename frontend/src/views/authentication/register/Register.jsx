@@ -1,32 +1,59 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import {
+  CAlert,
   CButton,
   CCard,
   CCardBody,
   CCol,
   CContainer,
   CForm,
-  CFormCheck,
   CFormInput,
   CFormLabel,
   CInputGroup,
   CInputGroupText,
   CRow,
-  CTooltip,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { apple } from 'src/assets/brand/apple'
-import { google } from 'src/assets/brand/google'
-import { logo } from 'src/assets/brand/logo'
-import { eye } from 'src/assets/icons/eye'
+import * as icon from '@coreui/icons'
+import logo from '../../../assets/images/logo.png'
+import { eye } from '../../../assets/icons/eye'
+import { postUsuarioEmpleado } from '../../../service/api'
 
 const Register = () => {
   const navigate = useNavigate()
 
-  const handleSubmit = (event) => {
-    event.preventDefault()
-    navigate('/authentication/check-email')
+  const [mensaje, setMensaje] = useState(false)
+  const [error, setError] = useState('')
+  const [verPassword, setVerPassword] = useState(false)
+  const [cuenta, setCuenta] = useState({ ID_Empleado: '', Usuario: '', Password: '' })
+
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    setCuenta((prev) => ({ ...prev, [name]: value }))
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    setError('')
+
+    postUsuarioEmpleado({
+      ID_Empleado: Number(cuenta.ID_Empleado),
+      Usuario: cuenta.Usuario.trim(),
+      Password: cuenta.Password,
+    })
+      .then((res) => {
+        if (!res.ok) {
+          setError(res.mensaje || 'No se pudo crear la cuenta')
+          return
+        }
+        setMensaje(true)
+        setTimeout(() => navigate('/authentication/login'), 2000)
+      })
+      .catch((e) => {
+        console.error(e)
+        setError('No se pudo conectar con el servidor')
+      })
   }
 
   return (
@@ -36,88 +63,83 @@ const Register = () => {
           <CCol md={8} lg={6} xl={5}>
             <div className="d-flex flex-column gap-4 text-center">
               <div>
-                <CIcon icon={logo} height={48} />
+                <img src={logo} alt="Gran Hotel el Toro" height={96} />
               </div>
+              {mensaje && (
+                <CAlert color="success" className="shadow-sm mb-0">
+                  ¡Cuenta creada con exito!
+                </CAlert>
+              )}
+              {error && (
+                <CAlert color="danger" className="shadow-sm mb-0">
+                  {error}
+                </CAlert>
+              )}
               <CCard className="p-4">
                 <CCardBody className="d-flex flex-column gap-4">
-                  <h2 className="h5 text-center mb-0">Create new account</h2>
+                  <h2 className="h5 text-center mb-0">Crear cuenta de empleado</h2>
                   <CForm className="row gy-3 text-start" onSubmit={handleSubmit}>
                     <CCol xs={12}>
-                      <CFormLabel htmlFor="name">Name</CFormLabel>
-                      <CFormInput id="name" placeholder="Your name" autoComplete="name" />
-                    </CCol>
-                    <CCol xs={12}>
-                      <CFormLabel htmlFor="email">Email address</CFormLabel>
+                      <CFormLabel htmlFor="ID_Empleado">ID de Empleado</CFormLabel>
                       <CFormInput
-                        id="email"
-                        type="email"
-                        placeholder="your@email.com"
-                        autoComplete="email"
+                        id="ID_Empleado"
+                        name="ID_Empleado"
+                        type="number"
+                        placeholder="1"
+                        min={1}
+                        required
+                        value={cuenta.ID_Empleado}
+                        onChange={handleChange}
                       />
                     </CCol>
                     <CCol xs={12}>
-                      <CFormLabel htmlFor="password">Password</CFormLabel>
+                      <CFormLabel htmlFor="Usuario">Usuario</CFormLabel>
+                      <CFormInput
+                        id="Usuario"
+                        name="Usuario"
+                        placeholder="Tu usuario"
+                        autoComplete="username"
+                        required
+                        value={cuenta.Usuario}
+                        onChange={handleChange}
+                      />
+                    </CCol>
+                    <CCol xs={12}>
+                      <CFormLabel htmlFor="Password">Contraseña</CFormLabel>
                       <CInputGroup>
                         <CFormInput
-                          id="password"
-                          type="password"
-                          placeholder="Your password"
+                          id="Password"
+                          name="Password"
+                          type={verPassword ? 'text' : 'password'}
+                          placeholder="Tu contraseña"
                           autoComplete="new-password"
+                          required
+                          value={cuenta.Password}
+                          onChange={handleChange}
                         />
                         <CInputGroupText>
-                          <CTooltip content="Show password">
-                            <CButton
-                              type="button"
-                              color="link"
-                              className="p-0 link-secondary"
-                              aria-label="Show password"
-                            >
-                              <CIcon icon={eye} size="sm" />
-                            </CButton>
-                          </CTooltip>
+                          <CButton
+                            type="button"
+                            color="link"
+                            className="p-0 link-secondary"
+                            aria-label="Ver contraseña"
+                            onClick={() => setVerPassword(!verPassword)}
+                          >
+                            <CIcon icon={verPassword ? icon.cilLowVision : eye} size="sm" />
+                          </CButton>
                         </CInputGroupText>
                       </CInputGroup>
                     </CCol>
                     <CCol xs={12}>
-                      <CFormCheck
-                        id="acceptTerms"
-                        label={
-                          <>
-                            I accept the <a href="#">terms and conditions</a>
-                          </>
-                        }
-                      />
-                    </CCol>
-                    <CCol xs={12}>
-                      <CButton color="primary" type="submit" className="w-100">
-                        Create new account
+                      <CButton color="primary" type="submit" className="w-100" disabled={mensaje}>
+                        Crear cuenta
                       </CButton>
                     </CCol>
                   </CForm>
-                  <div className="position-relative">
-                    <hr />
-                    <div className="position-absolute top-50 start-50 translate-middle bg-body px-2 text-body-tertiary text-uppercase small">
-                      or
-                    </div>
-                  </div>
-                  <CRow>
-                    <CCol>
-                      <CButton type="button" variant="outline" className="w-100">
-                        <CIcon icon={google} className="me-1" />
-                        Login with Google
-                      </CButton>
-                    </CCol>
-                    <CCol>
-                      <CButton type="button" variant="outline" className="w-100">
-                        <CIcon icon={apple} className="me-1" />
-                        Login with Apple
-                      </CButton>
-                    </CCol>
-                  </CRow>
                 </CCardBody>
               </CCard>
               <div className="text-body-secondary">
-                Already have an account? <Link to="/authentication/login">Sign in</Link>
+                ¿Ya tienes cuenta? <Link to="/authentication/login">Inicia sesion</Link>
               </div>
             </div>
           </CCol>

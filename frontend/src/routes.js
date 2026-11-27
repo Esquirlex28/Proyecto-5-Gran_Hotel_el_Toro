@@ -16,6 +16,9 @@ const Empleados = React.lazy(() => import('./views/empleados/Empleados'))
 const FormEmpleados = React.lazy(() => import('./views/empleados/FormEmpleados'))
 const Cargo = React.lazy(() => import('./views/cargos/Cargo'))
 const FormCargo = React.lazy(() => import('./views/cargos/FormCargo'))
+const EstadosHabitacion = React.lazy(() => import('./views/estadosHabitacion/EstadosHabitacion'))
+const FormEstadoHabitacion = React.lazy(() => import('./views/estadosHabitacion/FormEstadoHabitacion'))
+const Comodidades = React.lazy(() => import('./views/comodidades/Comodidades'))
 
 
 const routes = [
@@ -27,10 +30,11 @@ const routes = [
   { path: '/panel/habitaciones/:id/editar', name: 'Editar', element: FormHabitacion },
   { path: '/panel/tipohabitacion', exact: true, name: 'Tipos de Habitacion', element: TipoHabitacion },
   { path: '/panel/tipohabitacion/form', name: 'Formulario', element: FormTipoHabitacion },
-  { path: '/panel/tipohabitacion/:id/editar', name: 'Editar', element: FormTipoHabitacion },
   { path: '/panel/pisos', exact: true, name: 'Pisos', element: Pisos },
   { path: '/panel/pisos/form', name: 'Formulario', element: FormPiso },
-  { path: '/panel/pisos/:id/editar', name: 'Editar', element: FormPiso },
+  { path: '/panel/estadoshabitacion', exact: true, name: 'Estados de Habitacion', element: EstadosHabitacion },
+  { path: '/panel/estadoshabitacion/form', name: 'Formulario', element: FormEstadoHabitacion },
+  { path: '/panel/comodidades', exact: true, name: 'Comodidades', element: Comodidades },
   { path: '/panel/paises', exact: true, name: 'Paises', element: Paises },
   { path: '/panel/paises/form', exact: true, name: 'Formulario', element: FormPais },
   { path: '/panel/clientes', exact: true, name: 'Clientes', element: Clientes },

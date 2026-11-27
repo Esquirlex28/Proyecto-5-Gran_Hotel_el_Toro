@@ -22,9 +22,7 @@ import { getCargos } from '../../service/api'
 
 const CargoHabitacion = () => {
   const navigate = useNavigate()
-  const [cargos, setCargos] = useState([
-    {Nombre_Cargo: '', Descripcion: '', Salario_Base: 0.00}
-  ])
+  const [cargos, setCargos] = useState([])
   const [cargoEliminar, setcargoEliminar] = useState(null)
   const [mensaje, setMensaje] = useState(false)
 

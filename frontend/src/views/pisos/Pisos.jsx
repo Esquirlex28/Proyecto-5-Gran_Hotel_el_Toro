@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   CContainer,
@@ -19,49 +19,17 @@ import {
 import CIcon from '@coreui/icons-react'
 import * as icon from '@coreui/icons'
 
-const pisosPorDefecto = [
-  {
-    ID_Piso: 1,
-    Codigo_Piso: 'P1',
-    Nombre_Piso: 'Piso 1',
-    Capacidad_Habitaciones: 20,
-    Observaciones: 'Acceso a recepcion y restaurante',
-  },
-  {
-    ID_Piso: 2,
-    Codigo_Piso: 'P2',
-    Nombre_Piso: 'Piso 2',
-    Capacidad_Habitaciones: 20,
-    Observaciones: '',
-  },
-  {
-    ID_Piso: 3,
-    Codigo_Piso: 'P3',
-    Nombre_Piso: 'Piso 3',
-    Capacidad_Habitaciones: 18,
-    Observaciones: 'Habitaciones Business',
-  },
-  {
-    ID_Piso: 4,
-    Codigo_Piso: 'P4',
-    Nombre_Piso: 'Piso 4',
-    Capacidad_Habitaciones: 12,
-    Observaciones: 'Suites con vista al mar',
-  },
-  {
-    ID_Piso: 5,
-    Codigo_Piso: 'PH',
-    Nombre_Piso: 'Penthouse',
-    Capacidad_Habitaciones: 2,
-    Observaciones: 'Suites presidenciales',
-  },
-]
+import { getPisos } from '../../service/api'
 
 const Pisos = () => {
   const navigate = useNavigate()
-  const [pisos, setPisos] = useState(pisosPorDefecto)
+  const [pisos, setPisos] = useState([])
   const [pisoEliminar, setPisoEliminar] = useState(null)
   const [mensaje, setMensaje] = useState(false)
+
+  useEffect(() => {
+    getPisos().then((res) => setPisos(Array.isArray(res) ? res : []))
+  }, [])
 
   const deletePiso = () => {
     console.log('Mandando peticion de eliminacion', pisoEliminar)
@@ -127,6 +95,7 @@ const Pisos = () => {
                     size="sm"
                     variant="outline"
                     className="me-2"
+                    disabled
                     onClick={() => navigate(`/panel/pisos/${p.ID_Piso}/editar`)}
                   >
                     <CIcon icon={icon.cilReload} /> Modificar
@@ -135,6 +104,7 @@ const Pisos = () => {
                     color="danger"
                     size="sm"
                     variant="outline"
+                    disabled
                     onClick={() => setPisoEliminar(p)}
                   >
                     <CIcon icon={icon.cilDelete} /> Eliminar

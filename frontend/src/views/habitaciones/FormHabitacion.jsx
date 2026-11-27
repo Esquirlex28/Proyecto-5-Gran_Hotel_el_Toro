@@ -40,11 +40,11 @@ const FormHabitacion = () => {
 
   useEffect(() => {
     getEstadosHabitacion()
-    .then(res=> setEstadosHabitacion(res));
+    .then(res => setEstadosHabitacion(Array.isArray(res) ? res : []))
     getTiposHabitacion()
-    .then(res => setTiposHabitacion(res));
+    .then(res => setTiposHabitacion(Array.isArray(res) ? res : []))
     getPisos()
-    .then(res => setPisos(res))
+    .then(res => setPisos(Array.isArray(res) ? res : []))
   }, [])
 
   const handleChange = (e) => {

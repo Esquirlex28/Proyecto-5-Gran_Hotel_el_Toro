@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import {
   CCard,
@@ -15,15 +15,14 @@ import {
 } from '@coreui/react'
 import { postPais } from '../../service/api'
 
-const FormPiso = () => {
+const FormPais = () => {
   const navigate = useNavigate()
   const { id } = useParams()
   const esEdicion = id !== undefined
 
   const [mensaje, setMensaje] = useState(false)
+  const [error, setError] = useState('')
   const [pais, setPais] = useState({ Nombre_Pais: '', Nacionalidad: '', Estado: 1 })
-
-  useEffect(() => {}, [])
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -36,13 +35,20 @@ const FormPiso = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    console.log(esEdicion ? 'Mandando peticion de actualizacion' : 'Mandando peticion de creacion')
-    console.log(pais)
-    postPais(pais).then(res => {
-      setMensaje(true)
-      setTimeout(() => navigate('/panel/paises'), 2000)
-    })
-    .catch(e => console.error(e))
+    setError('')
+    postPais(pais)
+      .then((res) => {
+        if (!res.ok) {
+          setError(res.mensaje || 'No se pudo guardar el pais')
+          return
+        }
+        setMensaje(true)
+        setTimeout(() => navigate('/panel/paises'), 2000)
+      })
+      .catch((e) => {
+        console.error(e)
+        setError('No se pudo conectar con el servidor')
+      })
   }
 
   return (
@@ -50,6 +56,11 @@ const FormPiso = () => {
       {mensaje && (
         <CAlert color="success" className="text-center shadow-sm">
           ¡Pais {esEdicion ? 'actualizado' : 'creado'} con exito!
+        </CAlert>
+      )}
+      {error && (
+        <CAlert color="danger" className="text-center shadow-sm">
+          {error}
         </CAlert>
       )}
       <CCard className="shadow-sm mb-4">
@@ -111,7 +122,7 @@ const FormPiso = () => {
               >
                 Cancelar
               </CButton>
-              <CButton color="primary" type="submit">
+              <CButton color="primary" type="submit" disabled={mensaje}>
                 Guardar
               </CButton>
             </div>
@@ -122,4 +133,4 @@ const FormPiso = () => {
   )
 }
 
-export default FormPiso
+export default FormPais

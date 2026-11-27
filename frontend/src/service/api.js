@@ -31,7 +31,6 @@ const peticionDelete = async (ruta) => {
 }
 
 export const getHabitaciones = () => peticionGet('/habitaciones');
-export const getHabitacion = (id) => peticionGet(`/habitaciones/${id}`);
 export const getPaises = () => peticionGet('/paises');
 export const postPais = (peticion) => peticionPost('/paises', peticion);
 export const getClientes = () => peticionGet('/clientes');
@@ -45,3 +44,9 @@ export const postHabitacion = (peticion) => peticionPost('/habitaciones', petici
 export const getTiposHabitacion = () => peticionGet('/tiposhabitaciones');
 export const getPisos = () => peticionGet('/pisos');
 export const getEstadosHabitacion = () => peticionGet('/estadoshabitacion');
+export const postPiso = (peticion) => peticionPost('/pisos', peticion);
+export const postTipoHabitacion = (peticion) => peticionPost('/tiposhabitaciones', peticion);
+export const postEstadoHabitacion = (peticion) => peticionPost('/estadoshabitacion', peticion);
+export const getComodidades = () => peticionGet('/comodidades');
+export const getComodidadesPorTipo = (idTipo) => peticionGet(`/tipohabitacioncomodidades/tipo/${idTipo}`);
+export const postLoginEmpleado = (peticion) => peticionPost('/auth/empleados/login', peticion);
