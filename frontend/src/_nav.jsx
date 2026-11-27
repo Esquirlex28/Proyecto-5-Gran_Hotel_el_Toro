@@ -1,6 +1,6 @@
 import React from 'react'
 import CIcon from '@coreui/icons-react'
-import { cilBed, cilBuilding, cilMap, cilSpeedometer, cilTags } from '@coreui/icons'
+import { cilBed, cilBuilding, cilMap, cilPeople, cilSpeedometer, cilTags } from '@coreui/icons'
 import { CNavItem, CNavTitle } from '@coreui/react'
 
 const _nav = [
@@ -35,6 +35,12 @@ const _nav = [
     name: 'Paises',
     to: '/panel/paises',
     icon: <CIcon icon={cilMap} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'Clientes',
+    to: '/panel/clientes',
+    icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
   },
 ]
 

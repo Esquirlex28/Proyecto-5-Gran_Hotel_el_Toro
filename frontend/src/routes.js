@@ -10,6 +10,9 @@ const Pisos = React.lazy(() => import('./views/pisos/Pisos'))
 const FormPiso = React.lazy(() => import('./views/pisos/FormPiso'))
 const Paises = React.lazy(() => import('./views/paises/Paises'))
 const FormPais = React.lazy(() => import('./views/paises/FormPais'))
+const Clientes = React.lazy(() => import('./views/clientes/Clientes'))
+const FormClientes = React.lazy(() => import('./views/clientes/FormClientes'))
+
 
 const routes = [
   { path: '/panel/dashboard', exact: true, name: 'Inicio' },
@@ -26,6 +29,8 @@ const routes = [
   { path: '/panel/pisos/:id/editar', name: 'Editar', element: FormPiso },
   { path: '/panel/paises', exact: true, name: 'Paises', element: Paises },
   { path: '/panel/paises/form', exact: true, name: 'Formulario', element: FormPais },
+  { path: '/panel/clientes', exact: true, name: 'Clientes', element: Clientes },
+  { path: '/panel/clientes/form', exact: true, name: 'Formulario', element: FormClientes },
 ]
 
 export { routes }

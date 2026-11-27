@@ -34,3 +34,5 @@ export const getHabitaciones = () => peticionGet('/habitaciones');
 export const getHabitacion = (id) => peticionGet(`/habitaciones/${id}`);
 export const getPaises = () => peticionGet('/paises');
 export const postPais = (peticion) => peticionPost('/paises', peticion);
+export const getClientes = () => peticionGet('/clientes');
+export const postClientes = (peticion) => peticionPost('/clientes', peticion);
