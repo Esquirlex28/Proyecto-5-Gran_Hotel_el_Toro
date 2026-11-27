@@ -1,0 +1,107 @@
+// ==========================================
+// COMPONENTE: HOTEL CARD
+// ==========================================
+
+.hotel-card {
+  border: 1px solid var(--cui-border-color);
+  border-radius: 12px;
+
+  background-color: var(--cui-body-bg);
+  color: var(--cui-body-color);
+
+  box-shadow: var(--cui-box-shadow-sm);
+
+  transition:
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+
+  &.hotel-card-hoverable:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--cui-box-shadow);
+  }
+
+  .hotel-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+
+    padding: 18px 20px;
+
+    background-color: transparent;
+    border-bottom: 1px solid var(--cui-border-color);
+  }
+
+  .hotel-card-heading {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+  }
+
+  .hotel-card-title {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--cui-body-color);
+    margin: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .hotel-card-subtitle {
+    font-size: 0.85rem;
+    color: var(--cui-secondary-color);
+    margin-top: 4px;
+  }
+
+  .hotel-card-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 42px;
+    height: 42px;
+
+    background-color: var(--cui-primary-bg-subtle);
+    color: var(--cui-primary-text-emphasis);
+
+    border-radius: 10px;
+    flex-shrink: 0;
+  }
+
+  .hotel-card-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .hotel-card-body {
+    padding: 20px;
+  }
+
+  .hotel-card-image {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+
+    border-radius: 11px 11px 0 0;
+  }
+
+  .hotel-card-footer {
+    padding: 16px 20px;
+
+    background-color: transparent;
+    border-top: 1px solid var(--cui-border-color);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hotel-card {
+    transition: none;
+
+    &.hotel-card-hoverable:hover {
+      transform: none;
+    }
+  }
+}

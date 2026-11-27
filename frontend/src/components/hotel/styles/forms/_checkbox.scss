@@ -1,0 +1,31 @@
+.hotel-checkbox-group {
+  .form-check {
+    margin-bottom: 0;
+  }
+
+  .form-check-input {
+    width: 1.15rem;
+    height: 1.15rem;
+    cursor: pointer;
+
+    &:disabled {
+      cursor: not-allowed;
+    }
+  }
+
+  .form-check-label {
+    color: var(--cui-body-color);
+    cursor: pointer;
+  }
+
+  .hotel-checkbox-error {
+    color: var(--cui-form-invalid-color);
+    font-size: 0.85rem;
+    margin-top: 5px;
+  }
+
+  .hotel-checkbox-help {
+    color: var(--cui-secondary-color);
+    font-size: 0.85rem;
+  }
+}

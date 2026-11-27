@@ -1,0 +1,123 @@
+.hotel-auth-layout {
+  min-height: 100vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 32px 20px;
+
+  background-color: var(--cui-tertiary-bg);
+  color: var(--cui-body-color);
+
+  .hotel-auth-container {
+    width: 100%;
+    margin: auto;
+  }
+
+  // LOGO DEL HOTEL
+
+  .hotel-auth-brand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+
+    text-align: center;
+    margin-bottom: 25px;
+  }
+
+  .hotel-auth-brand-name {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--cui-body-color);
+  }
+
+  // TARJETA PRINCIPAL
+
+  .hotel-auth-card {
+    background-color: var(--cui-body-bg);
+    border: 1px solid var(--cui-border-color);
+    border-radius: 14px;
+
+    padding: 32px;
+
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+  }
+
+  // ENCABEZADO
+
+  .hotel-auth-header {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+
+  .hotel-auth-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--cui-body-color);
+    margin-bottom: 10px;
+  }
+
+  .hotel-auth-subtitle {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--cui-secondary-color);
+    margin: 0;
+  }
+
+  // CONTENIDO
+
+  .hotel-auth-content {
+    width: 100%;
+  }
+
+  // PIE DEL FORMULARIO
+
+  .hotel-auth-footer {
+    text-align: center;
+    margin-top: 24px;
+    padding-top: 20px;
+
+    border-top: 1px solid var(--cui-border-color);
+
+    font-size: 0.9rem;
+    color: var(--cui-secondary-color);
+
+    a {
+      color: var(--cui-primary-text-emphasis);
+      font-weight: 600;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  // DERECHOS RESERVADOS
+
+  .hotel-auth-copyright {
+    margin-top: 24px;
+    text-align: center;
+
+    font-size: 0.8rem;
+    color: var(--cui-secondary-color);
+  }
+}
+
+// DISEÑO RESPONSIVO
+
+@media (max-width: 576px) {
+  .hotel-auth-layout {
+    padding: 24px 15px;
+
+    .hotel-auth-card {
+      padding: 22px;
+    }
+
+    .hotel-auth-title {
+      font-size: 1.5rem;
+    }
+  }
+}

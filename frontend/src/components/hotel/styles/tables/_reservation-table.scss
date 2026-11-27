@@ -1,0 +1,36 @@
+.hotel-reservation-table {
+  width: 100%;
+
+  .hotel-reservation-code {
+    font-weight: 600;
+    color: var(--cui-body-color);
+    white-space: nowrap;
+  }
+
+  .hotel-reservation-client {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  .hotel-reservation-total {
+    font-weight: 600;
+    color: var(--cui-body-color);
+    white-space: nowrap;
+  }
+
+  .hotel-reservation-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 6px;
+
+    button {
+      white-space: nowrap;
+    }
+  }
+}

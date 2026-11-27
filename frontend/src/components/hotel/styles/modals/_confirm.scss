@@ -1,0 +1,65 @@
+// ==========================================
+// COMPONENTE: HOTEL CONFIRM
+// ==========================================
+
+.hotel-confirm {
+
+  .hotel-confirm-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 16px;
+  }
+
+  .hotel-confirm-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+
+    @each $color in (
+      primary,
+      secondary,
+      success,
+      danger,
+      warning,
+      info
+    ) {
+      &.hotel-confirm-#{$color} {
+        background-color:
+          var(--cui-#{$color}-bg-subtle);
+
+        color:
+          var(--cui-#{$color}-text-emphasis);
+      }
+    }
+  }
+
+  .hotel-confirm-message {
+    color: var(--cui-body-color);
+    font-size: 1rem;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .hotel-confirm-details {
+    width: 100%;
+    padding: 12px;
+
+    border-radius: 8px;
+    border: 1px solid var(--cui-border-color);
+
+    background-color: var(--cui-tertiary-bg);
+    color: var(--cui-secondary-color);
+
+    font-size: 0.85rem;
+  }
+
+  .hotel-modal-footer {
+    justify-content: center;
+  }
+}

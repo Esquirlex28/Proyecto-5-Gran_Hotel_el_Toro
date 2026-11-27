@@ -1,0 +1,41 @@
+// ==========================================
+// COMPONENTE: HOTEL BADGE
+// ==========================================
+
+.hotel-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+
+  padding: 7px 12px;
+  border-radius: 6px;
+
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+
+  .icon {
+    flex-shrink: 0;
+  }
+}
+
+.hotel-badge-soft {
+  border: 1px solid transparent;
+
+  @each $color in (
+    primary,
+    secondary,
+    success,
+    danger,
+    warning,
+    info
+  ) {
+    &.hotel-badge-#{$color} {
+      background-color: var(--cui-#{$color}-bg-subtle);
+      color: var(--cui-#{$color}-text-emphasis);
+      border-color: var(--cui-#{$color}-border-subtle);
+    }
+  }
+}

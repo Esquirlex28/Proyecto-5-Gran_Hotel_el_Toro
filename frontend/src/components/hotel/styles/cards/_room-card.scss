@@ -1,0 +1,131 @@
+.hotel-room-card {
+  height: 100%;
+  overflow: hidden;
+
+  .hotel-room-image-container {
+    position: relative;
+    width: 100%;
+    height: 210px;
+    overflow: hidden;
+    border-radius: 8px;
+    background-color: var(--cui-tertiary-bg);
+  }
+
+  .hotel-room-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  &:hover .hotel-room-image {
+    transform: scale(1.04);
+  }
+
+  .hotel-room-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    color: var(--cui-secondary-color);
+  }
+
+  .hotel-room-status {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+  }
+
+  .hotel-room-content {
+    padding-top: 18px;
+  }
+
+  .hotel-room-type {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--cui-secondary-color);
+    letter-spacing: 0.5px;
+    margin-bottom: 5px;
+  }
+
+  .hotel-room-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--cui-body-color);
+    margin-bottom: 6px;
+  }
+
+  .hotel-room-number {
+    font-size: 0.85rem;
+    color: var(--cui-secondary-color);
+    margin-bottom: 12px;
+  }
+
+  .hotel-room-description {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--cui-secondary-color);
+    overflow-wrap: anywhere;
+  }
+
+  .hotel-room-capacity {
+    font-size: 0.9rem;
+    color: var(--cui-body-color);
+    margin-bottom: 12px;
+  }
+
+  .hotel-room-services {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 18px;
+  }
+
+  .hotel-room-price-section {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 6px;
+
+    padding-top: 15px;
+    margin-top: 15px;
+    border-top: 1px solid var(--cui-border-color);
+  }
+
+  .hotel-room-price {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--cui-primary-text-emphasis);
+  }
+
+  .hotel-room-price-label {
+    font-size: 0.85rem;
+    color: var(--cui-secondary-color);
+  }
+
+  .hotel-room-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 18px;
+
+    button {
+      flex: 1 1 auto;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hotel-room-card .hotel-room-image {
+    transition: none;
+  }
+
+  .hotel-room-card:hover .hotel-room-image {
+    transform: none;
+  }
+}

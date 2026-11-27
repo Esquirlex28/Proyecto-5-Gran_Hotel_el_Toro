@@ -1,0 +1,79 @@
+// ==========================================
+// COMPONENTE: HOTEL EMPTY
+// ==========================================
+
+.hotel-empty {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  text-align: center;
+  gap: 14px;
+  padding: 50px 24px;
+
+  .hotel-empty-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 80px;
+    height: 80px;
+
+    border-radius: 50%;
+
+    background-color: var(--cui-secondary-bg);
+    color: var(--cui-secondary-color);
+
+    .icon {
+      width: 36px;
+      height: 36px;
+    }
+  }
+
+  .hotel-empty-title {
+    color: var(--cui-body-color);
+
+    font-size: 1.2rem;
+    font-weight: 600;
+
+    margin: 0;
+  }
+
+  .hotel-empty-description {
+    color: var(--cui-secondary-color);
+
+    font-size: 0.9rem;
+    line-height: 1.6;
+
+    max-width: 420px;
+    margin: 0;
+  }
+
+  .hotel-button {
+    margin-top: 6px;
+  }
+
+  &.hotel-empty-compact {
+    padding: 24px 16px;
+    gap: 10px;
+
+    .hotel-empty-icon {
+      width: 56px;
+      height: 56px;
+
+      .icon {
+        width: 26px;
+        height: 26px;
+      }
+    }
+
+    .hotel-empty-title {
+      font-size: 1rem;
+    }
+
+    .hotel-empty-description {
+      font-size: 0.85rem;
+    }
+  }
+}

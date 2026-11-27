@@ -1,0 +1,22 @@
+.hotel-employee-table {
+  width: 100%;
+
+  .hotel-employee-information {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .hotel-employee-name {
+    color: var(--cui-body-color);
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+
+  .hotel-employee-email {
+    color: var(--cui-secondary-color);
+    font-size: 0.8rem;
+    margin-top: 3px;
+    overflow-wrap: anywhere;
+  }
+}

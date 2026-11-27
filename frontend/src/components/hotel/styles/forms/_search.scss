@@ -1,0 +1,89 @@
+// ==========================================
+// COMPONENTE: HOTEL SEARCH
+// ==========================================
+
+.hotel-search {
+  width: 100%;
+
+  .form-label {
+    color: var(--cui-body-color);
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+
+  .hotel-search-group {
+    border: 1px solid var(--cui-border-color);
+    border-radius: 8px;
+
+    background-color: var(--cui-body-bg);
+
+    transition:
+      border-color 0.2s ease,
+      box-shadow 0.2s ease;
+
+    &:focus-within {
+      border-color: var(--cui-primary);
+
+      box-shadow: 0 0 0 3px
+        rgba(var(--cui-primary-rgb), 0.15);
+    }
+  }
+
+  .hotel-search-icon {
+    background-color: transparent;
+    color: var(--cui-secondary-color);
+
+    border: none;
+    padding: 10px 14px;
+
+    border-radius: 8px 0 0 8px;
+  }
+
+  .hotel-search-input {
+    min-height: 44px;
+    border: none;
+
+    background-color: transparent;
+    color: var(--cui-body-color);
+
+    padding: 10px 8px;
+
+    &:focus {
+      box-shadow: none;
+      background-color: transparent;
+    }
+
+    &::placeholder {
+      color: var(--cui-secondary-color);
+    }
+
+    &::-webkit-search-cancel-button {
+      display: none;
+    }
+  }
+
+  .hotel-search-clear {
+    border: none;
+    border-radius: 0 8px 8px 0;
+
+    background-color: transparent;
+    color: var(--cui-secondary-color);
+
+    padding: 10px 14px;
+
+    &:hover:not(:disabled) {
+      background-color: var(--cui-secondary-bg);
+      color: var(--cui-body-color);
+    }
+  }
+
+  .hotel-search-group:has(input:disabled) {
+    background-color: var(--cui-secondary-bg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hotel-search .hotel-search-group {
+    transition: none;
+  }
+}

@@ -1,0 +1,108 @@
+// ==========================================
+// COMPONENTE: HOTEL STAT CARD
+// ==========================================
+
+.hotel-stat-card {
+  height: 100%;
+
+  .hotel-stat-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    gap: 16px;
+  }
+
+  .hotel-stat-information {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .hotel-stat-title {
+    color: var(--cui-secondary-color);
+    font-size: 0.9rem;
+    font-weight: 500;
+
+    margin-bottom: 8px;
+  }
+
+  .hotel-stat-value {
+    color: var(--cui-body-color);
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.2;
+
+    font-variant-numeric: tabular-nums;
+    overflow-wrap: anywhere;
+  }
+
+  .hotel-stat-description {
+    color: var(--cui-secondary-color);
+    font-size: 0.8rem;
+
+    margin-top: 8px;
+  }
+
+  .hotel-stat-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 54px;
+    height: 54px;
+
+    border-radius: 12px;
+    flex-shrink: 0;
+
+    @each $color in (
+      primary,
+      secondary,
+      success,
+      danger,
+      warning,
+      info
+    ) {
+      &.hotel-stat-#{$color} {
+        background-color:
+          var(--cui-#{$color}-bg-subtle);
+
+        color:
+          var(--cui-#{$color}-text-emphasis);
+      }
+    }
+  }
+
+  .hotel-stat-trend {
+    display: flex;
+    align-items: center;
+
+    margin-top: 16px;
+    padding-top: 12px;
+
+    border-top: 1px solid var(--cui-border-color);
+  }
+
+  .hotel-stat-indicator {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+}
+
+// Adaptacion a pantallas pequenas
+@media (max-width: 576px) {
+  .hotel-stat-card {
+
+    .hotel-stat-value {
+      font-size: 1.6rem;
+    }
+
+    .hotel-stat-icon {
+      width: 44px;
+      height: 44px;
+    }
+  }
+}

@@ -1,0 +1,56 @@
+// ==========================================
+// COMPONENTE: HOTEL LOADER
+// ==========================================
+
+.hotel-loader {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  gap: 14px;
+  padding: 40px 20px;
+
+  text-align: center;
+
+  .hotel-loader-spinner {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  .hotel-loader-message {
+    color: var(--cui-secondary-color);
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  &.hotel-loader-small {
+    padding: 15px;
+    gap: 8px;
+
+    .hotel-loader-spinner {
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+  }
+
+  &.hotel-loader-large {
+    padding: 50px 20px;
+
+    .hotel-loader-spinner {
+      width: 3.5rem;
+      height: 3.5rem;
+    }
+  }
+
+  &.hotel-loader-full {
+    min-height: 60vh;
+  }
+
+  &.hotel-loader-inline {
+    display: inline-flex;
+    flex-direction: row;
+    padding: 8px;
+    gap: 10px;
+  }
+}

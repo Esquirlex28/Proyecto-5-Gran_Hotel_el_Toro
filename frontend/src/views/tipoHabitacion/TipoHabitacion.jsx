@@ -1,29 +1,51 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import {
-  CContainer,
-  CButton,
-  CTable,
-  CTableHead,
-  CTableBody,
-  CTableRow,
-  CTableHeaderCell,
-  CTableDataCell,
-  CModal,
-  CModalHeader,
-  CModalTitle,
-  CModalBody,
-  CModalFooter,
-  CAlert,
-} from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import * as icon from '@coreui/icons'
+
+import {
+  cilPlus,
+  cilTags,
+  cilPeople,
+  cilDollar,
+  cilPencil,
+  cilTrash,
+} from '@coreui/icons'
+
+import {
+  HotelPageHeader,
+  HotelButton,
+  HotelCard,
+  HotelTable,
+  HotelSearch,
+  HotelConfirm,
+  HotelAlert,
+} from '../../components/hotel'
 
 const tiposPorDefecto = [
-  { ID_Tipo_Habitacion: 1, Nombre_Tipo: 'Normal', Capacidad_Maxima: 2, Tarifa_Base: 850.0 },
-  { ID_Tipo_Habitacion: 2, Nombre_Tipo: 'Doble', Capacidad_Maxima: 4, Tarifa_Base: 1200.0 },
-  { ID_Tipo_Habitacion: 3, Nombre_Tipo: 'Business', Capacidad_Maxima: 2, Tarifa_Base: 1800.0 },
-  { ID_Tipo_Habitacion: 4, Nombre_Tipo: 'Suite', Capacidad_Maxima: 4, Tarifa_Base: 3500.0 },
+  {
+    ID_Tipo_Habitacion: 1,
+    Nombre_Tipo: 'Normal',
+    Capacidad_Maxima: 2,
+    Tarifa_Base: 850.0,
+  },
+  {
+    ID_Tipo_Habitacion: 2,
+    Nombre_Tipo: 'Doble',
+    Capacidad_Maxima: 4,
+    Tarifa_Base: 1200.0,
+  },
+  {
+    ID_Tipo_Habitacion: 3,
+    Nombre_Tipo: 'Business',
+    Capacidad_Maxima: 2,
+    Tarifa_Base: 1800.0,
+  },
+  {
+    ID_Tipo_Habitacion: 4,
+    Nombre_Tipo: 'Suite',
+    Capacidad_Maxima: 4,
+    Tarifa_Base: 3500.0,
+  },
   {
     ID_Tipo_Habitacion: 5,
     Nombre_Tipo: 'Suite Presidencial',
@@ -34,115 +56,207 @@ const tiposPorDefecto = [
 
 const TipoHabitacion = () => {
   const navigate = useNavigate()
+
   const [tipos, setTipos] = useState(tiposPorDefecto)
   const [tipoEliminar, setTipoEliminar] = useState(null)
   const [mensaje, setMensaje] = useState(false)
+  const [busqueda, setBusqueda] = useState('')
+
+  // FUNCION ORIGINAL DE ELIMINACION
 
   const deleteTipo = () => {
-    console.log('Mandando peticion de eliminacion', tipoEliminar)
-    setTipos((prev) => prev.filter((t) => t.ID_Tipo_Habitacion !== tipoEliminar.ID_Tipo_Habitacion))
+    if (!tipoEliminar) return
+
+    console.log(
+      'Mandando peticion de eliminacion',
+      tipoEliminar,
+    )
+
+    setTipos((prev) =>
+      prev.filter(
+        (t) =>
+          t.ID_Tipo_Habitacion !==
+          tipoEliminar.ID_Tipo_Habitacion,
+      ),
+    )
+
     setTipoEliminar(null)
     setMensaje(true)
+
     setTimeout(() => setMensaje(false), 2000)
   }
 
+  // BUSCADOR DE TIPOS DE HABITACIONES
+
+  const tiposFiltrados = tipos.filter((t) =>
+    `${t.ID_Tipo_Habitacion} ${t.Nombre_Tipo} ${t.Capacidad_Maxima} ${t.Tarifa_Base}`
+      .toLowerCase()
+      .includes(busqueda.trim().toLowerCase()),
+  )
+
+  // COLUMNAS DE LA TABLA
+
+  const columns = [
+    {
+      key: 'ID_Tipo_Habitacion',
+      label: '#',
+    },
+    {
+      key: 'Nombre_Tipo',
+      label: 'Nombre',
+      render: (t) => (
+        <>
+          <CIcon
+            icon={cilTags}
+            className="me-2 text-body-secondary"
+          />
+          <strong>{t.Nombre_Tipo}</strong>
+        </>
+      ),
+    },
+    {
+      key: 'Capacidad_Maxima',
+      label: 'Capacidad máxima',
+      render: (t) => (
+        <>
+          <CIcon
+            icon={cilPeople}
+            className="me-2 text-body-secondary"
+          />
+          {t.Capacidad_Maxima}
+        </>
+      ),
+    },
+    {
+      key: 'Tarifa_Base',
+      label: 'Tarifa base',
+      render: (t) => (
+        <>
+          <CIcon
+            icon={cilDollar}
+            className="me-2 text-body-secondary"
+          />
+          {Number(t.Tarifa_Base).toFixed(2)}
+        </>
+      ),
+    },
+    {
+      key: 'acciones',
+      label: 'Acciones',
+      className: 'text-center',
+      render: (t) => (
+        <div className="d-flex flex-wrap justify-content-center gap-2">
+          <HotelButton
+            color="primary"
+            size="sm"
+            variant="outline"
+            icon={cilPencil}
+            onClick={() =>
+              navigate(
+                `/panel/tipohabitacion/${t.ID_Tipo_Habitacion}/editar`,
+              )
+            }
+          >
+            Modificar
+          </HotelButton>
+
+          <HotelButton
+            color="danger"
+            size="sm"
+            variant="outline"
+            icon={cilTrash}
+            onClick={() => setTipoEliminar(t)}
+          >
+            Eliminar
+          </HotelButton>
+        </div>
+      ),
+    },
+  ]
+
   return (
     <>
+      {/* MENSAJE DE ELIMINACION */}
+
       {mensaje && (
-        <CAlert color="danger" className="text-center shadow-sm">
-          ¡Tipo de habitacion eliminado con exito!
-        </CAlert>
+        <HotelAlert
+          color="danger"
+          title="Eliminación de prueba"
+          className="mb-4"
+        >
+          ¡Tipo de habitación eliminado del listado de prueba!
+        </HotelAlert>
       )}
-      <h1>CRUD de los Tipos de Habitacion</h1>
-      <CContainer className="mb-4">
-        <div className="d-flex justify-content-between align-items-center gap-3">
-          <p className="mb-0 flex-grow-1">
-            Aquí encontrarás todos los tipos de habitacion existentes para poder gestionarlos
-          </p>
-          <CButton
+
+      {/* ENCABEZADO PRINCIPAL */}
+
+      <HotelPageHeader
+        title="CRUD de los tipos de habitación"
+        description="Aquí encontrarás todos los tipos de habitación existentes para poder gestionarlos."
+        icon={cilTags}
+        actions={
+          <HotelButton
             color="primary"
             variant="outline"
-            className="flex-shrink-0"
-            onClick={() => navigate('/panel/tipohabitacion/form')}
+            icon={cilPlus}
+            onClick={() =>
+              navigate('/panel/tipohabitacion/form')
+            }
           >
-            <CIcon icon={icon.cilPlus} /> Crear Tipo de Habitacion
-          </CButton>
+            Crear tipo de habitación
+          </HotelButton>
+        }
+      />
+
+      {/* TARJETA CON BUSCADOR Y TABLA */}
+
+      <HotelCard
+        title="Tipos de habitación"
+        subtitle="Listado de los tipos de habitación del hotel"
+        className="mb-4"
+      >
+        <div className="mb-4">
+          <HotelSearch
+            value={busqueda}
+            placeholder="Buscar tipo de habitación..."
+            onChange={(e) => setBusqueda(e.target.value)}
+            onClear={() => setBusqueda('')}
+          />
         </div>
-      </CContainer>
-      <hr />
-      <div className="bg-body rounded-3 shadow-sm p-3 mb-4">
-        <CTable hover responsive align="middle" className="mb-0">
-          <CTableHead>
-            <CTableRow>
-              <CTableHeaderCell>#</CTableHeaderCell>
-              <CTableHeaderCell>Nombre</CTableHeaderCell>
-              <CTableHeaderCell>Capacidad Maxima</CTableHeaderCell>
-              <CTableHeaderCell>Tarifa Base</CTableHeaderCell>
-              <CTableHeaderCell className="text-center">Acciones</CTableHeaderCell>
-            </CTableRow>
-          </CTableHead>
-          <CTableBody>
-            {tipos.map((t) => (
-              <CTableRow key={t.ID_Tipo_Habitacion}>
-                <CTableDataCell>{t.ID_Tipo_Habitacion}</CTableDataCell>
-                <CTableDataCell>
-                  <CIcon icon={icon.cilTags} className="me-2" />
-                  <strong>{t.Nombre_Tipo}</strong>
-                </CTableDataCell>
-                <CTableDataCell>
-                  <CIcon icon={icon.cilPeople} className="me-2" />
-                  {t.Capacidad_Maxima}
-                </CTableDataCell>
-                <CTableDataCell>
-                  <CIcon icon={icon.cilDollar} className="me-2" />
-                  {Number(t.Tarifa_Base).toFixed(2)}
-                </CTableDataCell>
-                <CTableDataCell className="text-center">
-                  <CButton
-                    color="primary"
-                    size="sm"
-                    variant="outline"
-                    className="me-2"
-                    onClick={() => navigate(`/panel/tipohabitacion/${t.ID_Tipo_Habitacion}/editar`)}
-                  >
-                    <CIcon icon={icon.cilReload} /> Modificar
-                  </CButton>
-                  <CButton
-                    color="danger"
-                    size="sm"
-                    variant="outline"
-                    onClick={() => setTipoEliminar(t)}
-                  >
-                    <CIcon icon={icon.cilDelete} /> Eliminar
-                  </CButton>
-                </CTableDataCell>
-              </CTableRow>
-            ))}
-          </CTableBody>
-        </CTable>
-      </div>
-      <CModal
+
+        <HotelTable
+          columns={columns}
+          data={tiposFiltrados}
+          rowKey="ID_Tipo_Habitacion"
+          emptyMessage={
+            busqueda.trim()
+              ? 'No se encontraron tipos de habitación.'
+              : 'No hay tipos de habitación registrados.'
+          }
+        />
+      </HotelCard>
+
+      {/* CONFIRMACION DE ELIMINACION */}
+
+      <HotelConfirm
         visible={tipoEliminar !== null}
         onClose={() => setTipoEliminar(null)}
-        alignment="center"
-        aria-labelledby="ModalEliminarTipoLabel"
+        onConfirm={deleteTipo}
+        title="Eliminar tipo de habitación"
+        message={
+          <>
+            ¿Seguro que deseas eliminar el tipo{' '}
+            <strong>{tipoEliminar?.Nombre_Tipo}</strong>?
+          </>
+        }
+        confirmText="Eliminar"
+        cancelText="Cancelar"
+        color="danger"
+        icon={cilTrash}
+        confirmIcon={cilTrash}
       >
-        <CModalHeader>
-          <CModalTitle id="ModalEliminarTipoLabel">Eliminar tipo de habitación</CModalTitle>
-        </CModalHeader>
-        <CModalBody>
-          ¿Seguro que deseas eliminar el tipo <strong>{tipoEliminar?.Nombre_Tipo}</strong>? Esta
-          acción no se puede deshacer.
-        </CModalBody>
-        <CModalFooter>
-          <CButton color="secondary" onClick={() => setTipoEliminar(null)}>
-            Cancelar
-          </CButton>
-          <CButton color="danger" onClick={deleteTipo}>
-            Eliminar
-          </CButton>
-        </CModalFooter>
-      </CModal>
+        Esta acción no se puede deshacer dentro del listado actual.
+      </HotelConfirm>
     </>
   )
 }

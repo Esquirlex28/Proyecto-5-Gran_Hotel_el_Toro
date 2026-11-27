@@ -1,0 +1,98 @@
+.hotel-avatar {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+  flex-shrink: 0;
+  vertical-align: middle;
+  font-weight: 600;
+  user-select: none;
+
+  .hotel-avatar-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+
+  .hotel-avatar-initials {
+    line-height: 1;
+  }
+
+  // TAMAÑOS
+
+  &.hotel-avatar-sm {
+    width: 32px;
+    height: 32px;
+    font-size: 0.75rem;
+  }
+
+  &.hotel-avatar-md {
+    width: 44px;
+    height: 44px;
+    font-size: 1rem;
+  }
+
+  &.hotel-avatar-lg {
+    width: 64px;
+    height: 64px;
+    font-size: 1.4rem;
+  }
+
+  &.hotel-avatar-xl {
+    width: 96px;
+    height: 96px;
+    font-size: 2rem;
+  }
+
+  // COLORES DE COREUI
+
+  @each $color in (
+    primary,
+    secondary,
+    success,
+    danger,
+    warning,
+    info
+  ) {
+    &.hotel-avatar-#{$color} {
+      background-color:
+        var(--cui-#{$color}-bg-subtle);
+
+      color:
+        var(--cui-#{$color}-text-emphasis);
+    }
+  }
+
+  // INDICADORES DE ESTADO
+
+  .hotel-avatar-status {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+
+    width: 27%;
+    height: 27%;
+
+    border-radius: 50%;
+    border: 2px solid var(--cui-body-bg);
+  }
+
+  .hotel-avatar-status-online {
+    background-color: var(--cui-success);
+  }
+
+  .hotel-avatar-status-offline {
+    background-color: var(--cui-secondary);
+  }
+
+  .hotel-avatar-status-away {
+    background-color: var(--cui-warning);
+  }
+
+  .hotel-avatar-status-busy {
+    background-color: var(--cui-danger);
+  }
+}

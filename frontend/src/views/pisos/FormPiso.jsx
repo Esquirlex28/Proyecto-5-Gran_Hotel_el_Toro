@@ -1,16 +1,15 @@
 import React, { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
+import { CRow, CCol } from '@coreui/react'
+import CIcon from '@coreui/icons-react'
+import { cilBuilding } from '@coreui/icons'
+
 import {
-  CCard,
-  CCardBody,
-  CForm,
-  CFormInput,
-  CFormTextarea,
-  CRow,
-  CCol,
-  CButton,
-  CAlert,
-} from '@coreui/react'
+  HotelForm,
+  HotelInput,
+  HotelTextarea,
+  HotelAlert,
+} from '../../components/hotel'
 
 const FormPiso = () => {
   const navigate = useNavigate()
@@ -18,6 +17,7 @@ const FormPiso = () => {
   const esEdicion = id !== undefined
 
   const [mensaje, setMensaje] = useState(false)
+
   const [piso, setPiso] = useState(
     esEdicion
       ? {
@@ -26,96 +26,132 @@ const FormPiso = () => {
           capacidadHabitaciones: 20,
           observaciones: 'Acceso a recepcion y restaurante',
         }
-      : { codigo: '', nombre: '', capacidadHabitaciones: 1, observaciones: '' },
+      : {
+          codigo: '',
+          nombre: '',
+          capacidadHabitaciones: 1,
+          observaciones: '',
+        },
   )
 
   const handleChange = (e) => {
     const { name, value } = e.target
-    setPiso((prev) => ({ ...prev, [name]: value }))
+
+    setPiso((prev) => ({
+      ...prev,
+      [name]: value,
+    }))
   }
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    console.log(esEdicion ? 'Mandando peticion de actualizacion' : 'Mandando peticion de creacion')
+
+    console.log(
+      esEdicion
+        ? 'Mandando peticion de actualizacion'
+        : 'Mandando peticion de creacion',
+    )
+
     console.log(piso)
+
     setMensaje(true)
+
     setTimeout(() => navigate('/panel/pisos'), 2000)
   }
 
   return (
     <>
+      {/* MENSAJE DEL SISTEMA */}
+
       {mensaje && (
-        <CAlert color="success" className="text-center shadow-sm">
-          ¡Piso {esEdicion ? 'actualizado' : 'creado'} con exito!
-        </CAlert>
+        <HotelAlert
+          color="success"
+          title="Operación de prueba exitosa"
+          className="mb-4"
+        >
+          ¡Piso {esEdicion ? 'actualizado' : 'creado'} en la simulación!
+        </HotelAlert>
       )}
-      <CCard className="shadow-sm mb-4">
-        <CCardBody className="p-4">
-          <h1 className="h3">{esEdicion ? 'Editar' : 'Crear'} Piso</h1>
-          <hr className="mb-4" />
-          <CForm onSubmit={handleSubmit}>
-            <CRow>
-              <CCol md={6} className="mb-4">
-                <CFormInput
-                  type="text"
-                  name="codigo"
-                  label="Codigo del Piso"
-                  placeholder="P1"
-                  maxLength={25}
-                  required
-                  value={piso.codigo}
-                  onChange={handleChange}
-                />
-              </CCol>
-              <CCol md={6} className="mb-4">
-                <CFormInput
-                  type="text"
-                  name="nombre"
-                  label="Nombre del Piso"
-                  placeholder="Piso 1"
-                  maxLength={50}
-                  required
-                  value={piso.nombre}
-                  onChange={handleChange}
-                />
-              </CCol>
-            </CRow>
-            <CFormInput
-              className="mb-4"
+
+      {/* FORMULARIO PRINCIPAL */}
+
+      <HotelForm
+        title={esEdicion ? 'Editar piso' : 'Crear piso'}
+        subtitle={
+          esEdicion
+            ? 'Modifique la información del piso.'
+            : 'Complete la información del nuevo piso.'
+        }
+        icon={<CIcon icon={cilBuilding} size="xl" />}
+        onSubmit={handleSubmit}
+        onCancel={() => navigate('/panel/pisos')}
+        className="mb-4"
+      >
+        <CRow className="g-4">
+
+          {/* CODIGO DEL PISO */}
+
+          <CCol md={6}>
+            <HotelInput
+              type="text"
+              name="codigo"
+              label="Código del piso"
+              placeholder="P1"
+              maxLength={25}
+              required
+              value={piso.codigo}
+              onChange={handleChange}
+            />
+          </CCol>
+
+          {/* NOMBRE DEL PISO */}
+
+          <CCol md={6}>
+            <HotelInput
+              type="text"
+              name="nombre"
+              label="Nombre del piso"
+              placeholder="Piso 1"
+              maxLength={50}
+              required
+              value={piso.nombre}
+              onChange={handleChange}
+            />
+          </CCol>
+
+          {/* CAPACIDAD DE HABITACIONES */}
+
+          <CCol xs={12}>
+            <HotelInput
               type="number"
               name="capacidadHabitaciones"
-              label="Capacidad de Habitaciones"
+              label="Capacidad de habitaciones"
               placeholder="20"
               min={1}
               required
               value={piso.capacidadHabitaciones}
               onChange={handleChange}
             />
-            <CFormTextarea
+          </CCol>
+
+          {/* OBSERVACIONES */}
+
+          <CCol xs={12}>
+            <HotelTextarea
               label="Observaciones"
               rows={4}
               maxLength={500}
-              text="Opcional. Maximo 500 caracteres."
+              helpText="Opcional. Máximo 500 caracteres."
+              placeholder="Escriba las observaciones del piso..."
               name="observaciones"
               value={piso.observaciones}
               onChange={handleChange}
+              showCount
             />
-            <div className="d-flex justify-content-between align-items-center gap-2 mt-4 pt-3 border-top">
-              <CButton
-                color="secondary"
-                variant="outline"
-                type="button"
-                onClick={() => navigate('/panel/pisos')}
-              >
-                Cancelar
-              </CButton>
-              <CButton color="primary" type="submit">
-                Guardar
-              </CButton>
-            </div>
-          </CForm>
-        </CCardBody>
-      </CCard>
+          </CCol>
+
+        </CRow>
+      </HotelForm>
     </>
   )
 }

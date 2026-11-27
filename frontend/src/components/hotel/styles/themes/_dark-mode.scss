@@ -1,0 +1,27 @@
+// =====================================
+// CONTRASTE EN MODO OSCURO
+// =====================================
+
+[data-coreui-theme='dark'] {
+
+  .hotel-room-price,
+  .hotel-reservation-card-total strong,
+  .hotel-client-card-reservations strong,
+  .hotel-login-link,
+  .hotel-register-link,
+  .hotel-auth-footer a {
+    color: #b1a9ff;
+  }
+
+  .hotel-button.btn-outline-primary {
+    --cui-btn-color: #b1a9ff;
+    --cui-btn-border-color: #9289ed;
+    --cui-btn-hover-color: #ffffff;
+    --cui-btn-hover-bg: #5856d6;
+    --cui-btn-hover-border-color: #5856d6;
+  }
+
+  .hotel-pagination .page-link {
+    --cui-pagination-color: #b1a9ff;
+  }
+}

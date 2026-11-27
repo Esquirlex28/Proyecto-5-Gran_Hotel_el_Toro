@@ -1,23 +1,24 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import {
-  CContainer,
-  CButton,
-  CTable,
-  CTableHead,
-  CTableBody,
-  CTableRow,
-  CTableHeaderCell,
-  CTableDataCell,
-  CModal,
-  CModalHeader,
-  CModalTitle,
-  CModalBody,
-  CModalFooter,
-  CAlert,
-} from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import * as icon from '@coreui/icons'
+
+import {
+  cilPlus,
+  cilBuilding,
+  cilBed,
+  cilPencil,
+  cilTrash,
+} from '@coreui/icons'
+
+import {
+  HotelPageHeader,
+  HotelButton,
+  HotelCard,
+  HotelTable,
+  HotelSearch,
+  HotelConfirm,
+  HotelAlert,
+} from '../../components/hotel'
 
 const pisosPorDefecto = [
   {
@@ -59,114 +60,199 @@ const pisosPorDefecto = [
 
 const Pisos = () => {
   const navigate = useNavigate()
+
   const [pisos, setPisos] = useState(pisosPorDefecto)
   const [pisoEliminar, setPisoEliminar] = useState(null)
   const [mensaje, setMensaje] = useState(false)
+  const [busqueda, setBusqueda] = useState('')
+
+  // FUNCION ORIGINAL DE ELIMINACION
 
   const deletePiso = () => {
-    console.log('Mandando peticion de eliminacion', pisoEliminar)
-    setPisos((prev) => prev.filter((p) => p.ID_Piso !== pisoEliminar.ID_Piso))
+    if (!pisoEliminar) return
+
+    console.log(
+      'Mandando peticion de eliminacion',
+      pisoEliminar,
+    )
+
+    setPisos((prev) =>
+      prev.filter(
+        (p) => p.ID_Piso !== pisoEliminar.ID_Piso,
+      ),
+    )
+
     setPisoEliminar(null)
     setMensaje(true)
+
     setTimeout(() => setMensaje(false), 2000)
   }
 
+  // BUSCADOR DE PISOS
+
+  const pisosFiltrados = pisos.filter((p) =>
+    `${p.Codigo_Piso} ${p.Nombre_Piso} ${p.Capacidad_Habitaciones} ${p.Observaciones}`
+      .toLowerCase()
+      .includes(busqueda.trim().toLowerCase()),
+  )
+
+  // COLUMNAS DE LA TABLA
+
+  const columns = [
+    {
+      key: 'Codigo_Piso',
+      label: 'Código',
+    },
+    {
+      key: 'Nombre_Piso',
+      label: 'Nombre',
+      render: (p) => (
+        <>
+          <CIcon
+            icon={cilBuilding}
+            className="me-2 text-body-secondary"
+          />
+
+          <strong>{p.Nombre_Piso}</strong>
+        </>
+      ),
+    },
+    {
+      key: 'Capacidad_Habitaciones',
+      label: 'Capacidad de habitaciones',
+      render: (p) => (
+        <>
+          <CIcon
+            icon={cilBed}
+            className="me-2 text-body-secondary"
+          />
+
+          {p.Capacidad_Habitaciones}
+        </>
+      ),
+    },
+    {
+      key: 'Observaciones',
+      label: 'Observaciones',
+      render: (p) => (
+        <span className="text-body-secondary">
+          {p.Observaciones || '—'}
+        </span>
+      ),
+    },
+    {
+      key: 'acciones',
+      label: 'Acciones',
+      className: 'text-center',
+      render: (p) => (
+        <div className="d-flex flex-wrap justify-content-center gap-2">
+          <HotelButton
+            color="primary"
+            size="sm"
+            variant="outline"
+            icon={cilPencil}
+            onClick={() =>
+              navigate(`/panel/pisos/${p.ID_Piso}/editar`)
+            }
+          >
+            Modificar
+          </HotelButton>
+
+          <HotelButton
+            color="danger"
+            size="sm"
+            variant="outline"
+            icon={cilTrash}
+            onClick={() => setPisoEliminar(p)}
+          >
+            Eliminar
+          </HotelButton>
+        </div>
+      ),
+    },
+  ]
+
   return (
     <>
+      {/* MENSAJE DE ELIMINACION */}
+
       {mensaje && (
-        <CAlert color="danger" className="text-center shadow-sm">
-          ¡Piso eliminado con exito!
-        </CAlert>
+        <HotelAlert
+          color="danger"
+          title="Eliminación de prueba"
+          className="mb-4"
+        >
+          ¡Piso eliminado del listado de prueba!
+        </HotelAlert>
       )}
-      <h1>CRUD de los Pisos</h1>
-      <CContainer className="mb-4">
-        <div className="d-flex justify-content-between align-items-center gap-3">
-          <p className="mb-0 flex-grow-1">
-            Aquí encontrarás todos los pisos del hotel para poder gestionarlos
-          </p>
-          <CButton
+
+      {/* ENCABEZADO PRINCIPAL */}
+
+      <HotelPageHeader
+        title="CRUD de los pisos"
+        description="Aquí encontrarás todos los pisos del hotel para poder gestionarlos."
+        icon={cilBuilding}
+        actions={
+          <HotelButton
             color="primary"
             variant="outline"
-            className="flex-shrink-0"
+            icon={cilPlus}
             onClick={() => navigate('/panel/pisos/form')}
           >
-            <CIcon icon={icon.cilPlus} /> Crear Piso
-          </CButton>
+            Crear piso
+          </HotelButton>
+        }
+      />
+
+      {/* TARJETA CON BUSCADOR Y TABLA */}
+
+      <HotelCard
+        title="Pisos del hotel"
+        subtitle="Listado de los pisos y sus características"
+        className="mb-4"
+      >
+        <div className="mb-4">
+          <HotelSearch
+            value={busqueda}
+            placeholder="Buscar piso..."
+            onChange={(e) => setBusqueda(e.target.value)}
+            onClear={() => setBusqueda('')}
+          />
         </div>
-      </CContainer>
-      <hr />
-      <div className="bg-body rounded-3 shadow-sm p-3 mb-4">
-        <CTable hover responsive align="middle" className="mb-0">
-          <CTableHead>
-            <CTableRow>
-              <CTableHeaderCell>Codigo</CTableHeaderCell>
-              <CTableHeaderCell>Nombre</CTableHeaderCell>
-              <CTableHeaderCell>Capacidad de Habitaciones</CTableHeaderCell>
-              <CTableHeaderCell>Observaciones</CTableHeaderCell>
-              <CTableHeaderCell className="text-center">Acciones</CTableHeaderCell>
-            </CTableRow>
-          </CTableHead>
-          <CTableBody>
-            {pisos.map((p) => (
-              <CTableRow key={p.ID_Piso}>
-                <CTableDataCell>{p.Codigo_Piso}</CTableDataCell>
-                <CTableDataCell>
-                  <CIcon icon={icon.cilBuilding} className="me-2" />
-                  <strong>{p.Nombre_Piso}</strong>
-                </CTableDataCell>
-                <CTableDataCell>
-                  <CIcon icon={icon.cilBed} className="me-2" />
-                  {p.Capacidad_Habitaciones}
-                </CTableDataCell>
-                <CTableDataCell className="text-body-secondary">
-                  {p.Observaciones || '—'}
-                </CTableDataCell>
-                <CTableDataCell className="text-center text-nowrap">
-                  <CButton
-                    color="primary"
-                    size="sm"
-                    variant="outline"
-                    className="me-2"
-                    onClick={() => navigate(`/panel/pisos/${p.ID_Piso}/editar`)}
-                  >
-                    <CIcon icon={icon.cilReload} /> Modificar
-                  </CButton>
-                  <CButton
-                    color="danger"
-                    size="sm"
-                    variant="outline"
-                    onClick={() => setPisoEliminar(p)}
-                  >
-                    <CIcon icon={icon.cilDelete} /> Eliminar
-                  </CButton>
-                </CTableDataCell>
-              </CTableRow>
-            ))}
-          </CTableBody>
-        </CTable>
-      </div>
-      <CModal
+
+        <HotelTable
+          columns={columns}
+          data={pisosFiltrados}
+          rowKey="ID_Piso"
+          emptyMessage={
+            busqueda.trim()
+              ? 'No se encontraron pisos.'
+              : 'No hay pisos registrados.'
+          }
+        />
+      </HotelCard>
+
+      {/* CONFIRMACION DE ELIMINACION */}
+
+      <HotelConfirm
         visible={pisoEliminar !== null}
         onClose={() => setPisoEliminar(null)}
-        alignment="center"
-        aria-labelledby="ModalEliminarPisoLabel"
+        onConfirm={deletePiso}
+        title="Eliminar piso"
+        message={
+          <>
+            ¿Seguro que deseas eliminar el piso{' '}
+            <strong>{pisoEliminar?.Nombre_Piso}</strong>?
+          </>
+        }
+        confirmText="Eliminar"
+        cancelText="Cancelar"
+        color="danger"
+        icon={cilTrash}
+        confirmIcon={cilTrash}
       >
-        <CModalHeader>
-          <CModalTitle id="ModalEliminarPisoLabel">Eliminar piso</CModalTitle>
-        </CModalHeader>
-        <CModalBody>
-          ¿Seguro que deseas eliminar el piso <strong>{pisoEliminar?.Nombre_Piso}</strong>? Esta
-          acción no se puede deshacer.
-        </CModalBody>
-        <CModalFooter>
-          <CButton color="secondary" onClick={() => setPisoEliminar(null)}>
-            Cancelar
-          </CButton>
-          <CButton color="danger" onClick={deletePiso}>
-            Eliminar
-          </CButton>
-        </CModalFooter>
-      </CModal>
+        Esta acción no se puede deshacer dentro del listado actual.
+      </HotelConfirm>
     </>
   )
 }

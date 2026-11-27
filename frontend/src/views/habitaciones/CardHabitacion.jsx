@@ -1,18 +1,28 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
-  CCard,
-  CCardBody,
-  CCardTitle,
-  CButton,
   CCardImage,
-  CBadge,
   CListGroup,
   CListGroupItem,
 } from '@coreui/react'
-import habitacionImage from '../../assets/images/habitacion.jpg'
+
 import CIcon from '@coreui/icons-react'
-import { cilTags, cilPeople, cilDollar, cilBuilding } from '@coreui/icons'
+
+import {
+  cilTags,
+  cilPeople,
+  cilDollar,
+  cilBuilding,
+  cilArrowRight,
+} from '@coreui/icons'
+
+import habitacionImage from '../../assets/images/habitacion.jpg'
+
+import {
+  HotelCard,
+  HotelBadge,
+  HotelButton,
+} from '../../components/hotel'
 
 const coloresEstado = {
   Disponible: 'success',
@@ -31,8 +41,15 @@ export const CardHabitacion = ({
   piso = 1,
 }) => {
   const navigate = useNavigate()
+
   return (
-    <CCard className="h-100 shadow-sm border-0 overflow-hidden">
+    <HotelCard
+      className="h-100 overflow-hidden"
+      bodyClassName="p-0"
+      hoverable
+    >
+      {/* IMAGEN Y ESTADO DE LA HABITACION */}
+
       <div className="position-relative">
         <CCardImage
           orientation="top"
@@ -41,49 +58,96 @@ export const CardHabitacion = ({
           className="object-fit-cover"
           style={{ height: '12rem' }}
         />
-        <CBadge
+
+        <HotelBadge
           color={coloresEstado[estado] ?? 'secondary'}
+          soft={false}
           className="position-absolute top-0 start-0 m-2 px-3 py-2"
         >
           {estado}
-        </CBadge>
+        </HotelBadge>
       </div>
-      <CCardBody>
-        <CCardTitle>Habitación #{numero}</CCardTitle>
+
+      {/* INFORMACION DE LA HABITACION */}
+
+      <div className="p-3">
+
+        <h5 className="mb-3">
+          Habitación #{numero}
+        </h5>
+
         <CListGroup flush>
+
+          {/* TIPO */}
+
           <CListGroupItem className="d-flex justify-content-between px-0">
             <span>
-              <CIcon icon={cilTags} className="me-2 text-body-secondary" /> Tipo
+              <CIcon
+                icon={cilTags}
+                className="me-2 text-body-secondary"
+              />
+              Tipo
             </span>
+
             <strong>{tipo}</strong>
           </CListGroupItem>
+
+          {/* CAPACIDAD */}
+
           <CListGroupItem className="d-flex justify-content-between px-0">
             <span>
-              <CIcon icon={cilPeople} className="me-2 text-body-secondary" /> Capacidad
+              <CIcon
+                icon={cilPeople}
+                className="me-2 text-body-secondary"
+              />
+              Capacidad
             </span>
+
             <strong>{Capacidad}</strong>
           </CListGroupItem>
+
+          {/* TARIFA */}
+
           <CListGroupItem className="d-flex justify-content-between px-0">
             <span>
-              <CIcon icon={cilDollar} className="me-2 text-body-secondary" /> Tarifa
+              <CIcon
+                icon={cilDollar}
+                className="me-2 text-body-secondary"
+              />
+              Tarifa
             </span>
+
             <strong>{Tarifa}</strong>
           </CListGroupItem>
+
+          {/* PISO */}
+
           <CListGroupItem className="d-flex justify-content-between px-0">
             <span>
-              <CIcon icon={cilBuilding} className="me-2 text-body-secondary" /> Piso
+              <CIcon
+                icon={cilBuilding}
+                className="me-2 text-body-secondary"
+              />
+              Piso
             </span>
+
             <strong>{piso}</strong>
           </CListGroupItem>
+
         </CListGroup>
-        <CButton
+
+        {/* BOTON PARA GESTIONAR LA HABITACION */}
+
+        <HotelButton
           className="w-100 mt-3"
           color="primary"
+          icon={cilArrowRight}
           onClick={() => navigate(`/panel/habitaciones/${id}`)}
         >
-          Gestionar Habitacion
-        </CButton>
-      </CCardBody>
-    </CCard>
+          Gestionar habitación
+        </HotelButton>
+
+      </div>
+    </HotelCard>
   )
 }

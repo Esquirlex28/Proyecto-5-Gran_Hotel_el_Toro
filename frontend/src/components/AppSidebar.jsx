@@ -1,26 +1,6 @@
-/**
- * AppSidebar Component
- *
- * Collapsible navigation sidebar with branding, menu items, and toggle controls.
- *
- * Features:
- * - Redux-controlled visibility state
- * - Unfoldable/narrow mode for more screen space
- * - Brand logo with full and narrow variants
- * - Close button for mobile devices
- * - Footer with toggle button
- * - Dark color scheme
- * - Fixed positioning
- *
- * @component
- * @example
- * return (
- *   <AppSidebar />
- * )
- */
-
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import { Link } from 'react-router-dom'
 
 import {
   CCloseButton,
@@ -30,29 +10,22 @@ import {
   CSidebarHeader,
   CSidebarToggler,
 } from '@coreui/react'
-import CIcon from '@coreui/icons-react'
 
 import { AppSidebarNav } from './AppSidebarNav'
+import { HotelBadge } from './hotel'
 
-// sidebar nav config
 import navigation from '../_nav'
 
-/**
- * AppSidebar functional component
- *
- * Manages sidebar state with Redux:
- * - sidebarShow: Controls sidebar visibility
- * - sidebarUnfoldable: Controls narrow/wide mode
- *
- * Renders navigation from _nav.js configuration file.
- * Memoized to prevent unnecessary re-renders.
- *
- * @returns {React.ReactElement} Sidebar with navigation
- */
 const AppSidebar = () => {
   const dispatch = useDispatch()
-  const unfoldable = useSelector((state) => state.sidebarUnfoldable)
-  const sidebarShow = useSelector((state) => state.sidebarShow)
+
+  const unfoldable = useSelector(
+    (state) => state.sidebarUnfoldable,
+  )
+
+  const sidebarShow = useSelector(
+    (state) => state.sidebarShow,
+  )
 
   return (
     <CSidebar
@@ -62,26 +35,76 @@ const AppSidebar = () => {
       unfoldable={unfoldable}
       visible={sidebarShow}
       onVisibleChange={(visible) => {
-        dispatch({ type: 'set', sidebarShow: visible })
+        dispatch({
+          type: 'set',
+          sidebarShow: visible,
+        })
       }}
     >
+      {/* ENCABEZADO DEL MENU LATERAL */}
+
       <CSidebarHeader className="border-bottom">
-        <CSidebarBrand to="/panel/dashboard" className='text-decoration-none'>
-          <span className="sidebar-brand-full fw-bold fs-5">Gran Hotel el Toro</span>
-          <span className="sidebar-brand-narrow fw-bold">GT</span>
+
+        <CSidebarBrand
+          as={Link}
+          to="/panel/dashboard"
+          className="text-decoration-none"
+        >
+          <span className="sidebar-brand-full">
+            <span className="d-flex flex-column align-items-start gap-2">
+
+              <span className="fw-bold fs-5">
+                Gran Hotel El Toro
+              </span>
+
+              <HotelBadge color="primary">
+                Panel administrativo
+              </HotelBadge>
+
+            </span>
+          </span>
+
+          <span className="sidebar-brand-narrow fw-bold">
+            GT
+          </span>
         </CSidebarBrand>
+
+        {/* BOTON CERRAR EN DISPOSITIVOS MOVILES */}
+
         <CCloseButton
           className="d-lg-none"
           dark
-          onClick={() => dispatch({ type: 'set', sidebarShow: false })}
+          aria-label="Cerrar menú lateral"
+          onClick={() =>
+            dispatch({
+              type: 'set',
+              sidebarShow: false,
+            })
+          }
         />
+
       </CSidebarHeader>
+
+      {/* OPCIONES DEL MENU */}
+
       <AppSidebarNav items={navigation} />
+
+      {/* PIE DEL MENU LATERAL */}
+
       <CSidebarFooter className="border-top d-none d-lg-flex">
+
         <CSidebarToggler
-          onClick={() => dispatch({ type: 'set', sidebarUnfoldable: !unfoldable })}
+          aria-label="Expandir o contraer menú lateral"
+          onClick={() =>
+            dispatch({
+              type: 'set',
+              sidebarUnfoldable: !unfoldable,
+            })
+          }
         />
+
       </CSidebarFooter>
+
     </CSidebar>
   )
 }

@@ -1,138 +1,226 @@
-import { useParams, useNavigate } from 'react-router-dom'
 import React, { useState, useEffect } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
+import { CListGroup, CListGroupItem } from '@coreui/react'
+import CIcon from '@coreui/icons-react'
+
 import {
-  CButton,
-  CListGroup,
-  CListGroupItem,
-  CModal,
-  CModalHeader,
-  CModalTitle,
-  CModalBody,
-  CModalFooter,
-  CAlert,
-} from '@coreui/react'
+  cilArrowLeft,
+  cilPencil,
+  cilTrash,
+  cilTags,
+  cilPeople,
+  cilDollar,
+  cilBuilding,
+} from '@coreui/icons'
 
 import image from '../../assets/images/habitacion.jpg'
-import CIcon from '@coreui/icons-react'
-import * as icon from '@coreui/icons'
+
+import {
+  HotelButton,
+  HotelCard,
+  HotelConfirm,
+  HotelAlert,
+  HotelPageHeader,
+} from '../../components/hotel'
 
 const DetallesHabitacion = () => {
   const { id } = useParams()
   const navigate = useNavigate()
+
   const [modalEliminar, setModalEliminar] = useState(false)
   const [mensaje, setMensaje] = useState(false)
 
   useEffect(() => {
     if (!mensaje) return
-    const t = setTimeout(() => navigate(`/panel/habitaciones/${id}`), 2000)
+
+    const t = setTimeout(
+      () => navigate('/panel/habitaciones'),
+      2000,
+    )
+
     return () => clearTimeout(t)
-  }, [mensaje])
+  }, [mensaje, navigate])
 
   const deleteHabitacion = (e) => {
-    e.preventDefault()
+    e?.preventDefault()
+
     console.log('Mandando peticion de eliminacion')
+
     setMensaje(true)
     setModalEliminar(false)
-    setTimeout(() => navigate(`/panel/habitaciones`), 2000)
   }
 
   return (
     <>
+      {/* MENSAJE DE ELIMINACION */}
+
       {mensaje && (
-        <CAlert color="danger" className="text-center shadow-sm">
-          ¡Habitacion eliminada con exito!
-        </CAlert>
+        <HotelAlert
+          color="danger"
+          title="Eliminación de prueba"
+          className="mb-4"
+        >
+          Se ha simulado la eliminación de la habitación.
+        </HotelAlert>
       )}
+
+      {/* IMAGEN PRINCIPAL DE LA HABITACION */}
+
       <div
         className="position-relative overflow-hidden rounded-3 shadow mb-4"
         style={{ height: 'clamp(14rem, 45vh, 26rem)' }}
       >
         <img
           src={image}
-          alt="Habitacion"
+          alt="Habitación"
           className="position-absolute top-0 start-0 w-100 h-100 object-fit-cover"
         />
-        {/* Degradado para que el titulo blanco sea legible sobre cualquier imagen */}
+
+        {/* DEGRADADO DE LA IMAGEN */}
+
         <div
           className="position-absolute top-0 start-0 w-100 h-100"
-          style={{ background: 'linear-gradient(to top, rgba(0,0,0,.65), rgba(0,0,0,0) 55%)' }}
+          style={{
+            background:
+              'linear-gradient(to top, rgba(0,0,0,.65), rgba(0,0,0,0) 55%)',
+          }}
         />
+
         <h1 className="position-absolute bottom-0 start-0 m-4 h2 text-white">
-          Gestion de la Habitacion #{}
+          Gestión de la habitación
         </h1>
 
-        <CButton
+        {/* BOTON VOLVER */}
+
+        <HotelButton
           color="light"
           size="sm"
+          icon={cilArrowLeft}
           className="position-absolute top-0 start-0 m-3 shadow-sm"
           onClick={() => navigate('/panel/habitaciones')}
         >
-          <CIcon icon={icon.cilArrowLeft} className="me-1" /> Volver
-        </CButton>
+          Volver
+        </HotelButton>
       </div>
-      <div className="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
-        <h2 className="h4 mb-0">Detalles de la Habitacion</h2>
-        <div className="d-flex gap-2">
-          <CButton
-            color="primary"
-            variant="outline"
-            onClick={() => navigate(`/panel/habitaciones/${id}/editar`)}
-          >
-            <CIcon icon={icon.cilPencil} className="me-1" /> Modificar
-          </CButton>
-          <CButton color="danger" variant="outline" onClick={() => setModalEliminar(true)}>
-            <CIcon icon={icon.cilTrash} className="me-1" /> Eliminar
-          </CButton>
-        </div>
-      </div>
-      <CListGroup className="shadow-sm mb-4">
-        <CListGroupItem className="d-flex justify-content-between py-3">
-          <span>
-            <CIcon icon={icon.cilTags} className="me-2 text-body-secondary" /> Tipo
-          </span>
-          <strong>{}</strong>
-        </CListGroupItem>
-        <CListGroupItem className="d-flex justify-content-between py-3">
-          <span>
-            <CIcon icon={icon.cilPeople} className="me-2 text-body-secondary" /> Capacidad
-          </span>
-          <strong>{}</strong>
-        </CListGroupItem>
-        <CListGroupItem className="d-flex justify-content-between py-3">
-          <span>
-            <CIcon icon={icon.cilDollar} className="me-2 text-body-secondary" /> Tarifa
-          </span>
-          <strong>{}</strong>
-        </CListGroupItem>
-        <CListGroupItem className="d-flex justify-content-between py-3">
-          <span>
-            <CIcon icon={icon.cilBuilding} className="me-2 text-body-secondary" /> Piso
-          </span>
-          <strong>{}</strong>
-        </CListGroupItem>
-      </CListGroup>
-      <CModal
+
+      {/* ENCABEZADO Y ACCIONES */}
+
+      <HotelPageHeader
+        title="Detalles de la habitación"
+        description="Consulte y gestione la información de la habitación."
+        actions={
+          <div className="d-flex flex-wrap gap-2">
+
+            <HotelButton
+              color="primary"
+              variant="outline"
+              icon={cilPencil}
+              disabled={mensaje}
+              onClick={() =>
+                navigate(`/panel/habitaciones/${id}/editar`)
+              }
+            >
+              Modificar
+            </HotelButton>
+
+            <HotelButton
+              color="danger"
+              variant="outline"
+              icon={cilTrash}
+              disabled={mensaje}
+              onClick={() => setModalEliminar(true)}
+            >
+              Eliminar
+            </HotelButton>
+
+          </div>
+        }
+      />
+
+      {/* INFORMACION GENERAL */}
+
+      <HotelCard
+        title="Información general"
+        subtitle="Características de la habitación"
+        className="mb-4"
+      >
+        <CListGroup flush>
+
+          {/* TIPO DE HABITACION */}
+
+          <CListGroupItem className="d-flex justify-content-between align-items-center px-0 py-3">
+            <span>
+              <CIcon
+                icon={cilTags}
+                className="me-2 text-body-secondary"
+              />
+              Tipo
+            </span>
+
+            <strong>{}</strong>
+          </CListGroupItem>
+
+          {/* CAPACIDAD */}
+
+          <CListGroupItem className="d-flex justify-content-between align-items-center px-0 py-3">
+            <span>
+              <CIcon
+                icon={cilPeople}
+                className="me-2 text-body-secondary"
+              />
+              Capacidad
+            </span>
+
+            <strong>{}</strong>
+          </CListGroupItem>
+
+          {/* TARIFA */}
+
+          <CListGroupItem className="d-flex justify-content-between align-items-center px-0 py-3">
+            <span>
+              <CIcon
+                icon={cilDollar}
+                className="me-2 text-body-secondary"
+              />
+              Tarifa
+            </span>
+
+            <strong>{}</strong>
+          </CListGroupItem>
+
+          {/* PISO */}
+
+          <CListGroupItem className="d-flex justify-content-between align-items-center px-0 py-3">
+            <span>
+              <CIcon
+                icon={cilBuilding}
+                className="me-2 text-body-secondary"
+              />
+              Piso
+            </span>
+
+            <strong>{}</strong>
+          </CListGroupItem>
+
+        </CListGroup>
+      </HotelCard>
+
+      {/* VENTANA DE CONFIRMACION */}
+
+      <HotelConfirm
         visible={modalEliminar}
         onClose={() => setModalEliminar(false)}
-        alignment="center"
-        aria-labelledby="ModalEliminarLabel"
+        onConfirm={deleteHabitacion}
+        title="Eliminar habitación"
+        message="¿Seguro que deseas eliminar la habitación?"
+        confirmText="Eliminar"
+        cancelText="Cancelar"
+        color="danger"
+        icon={cilTrash}
+        confirmIcon={cilTrash}
       >
-        <CModalHeader>
-          <CModalTitle id="ModalEliminarLabel">Eliminar habitación</CModalTitle>
-        </CModalHeader>
-        <CModalBody>
-          ¿Seguro que deseas eliminar la habitación <strong>#{}</strong>? Esta acción no se puede
-          deshacer.
-        </CModalBody>
-        <CModalFooter>
-          <CButton color="secondary" onClick={() => setModalEliminar(false)}>
-            Cancelar
-          </CButton>
-          <CButton color="danger" onClick={deleteHabitacion}>
-            Eliminar
-          </CButton>
-        </CModalFooter>
-      </CModal>
+        Esta acción no se puede deshacer.
+      </HotelConfirm>
     </>
   )
 }

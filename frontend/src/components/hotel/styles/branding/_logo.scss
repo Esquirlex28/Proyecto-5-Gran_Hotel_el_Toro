@@ -1,0 +1,40 @@
+// =====================================
+// LOGO DEL HOTEL
+// =====================================
+
+.hotel-logo {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+  border-radius: 8px;
+  flex-shrink: 0;
+
+  transition: filter 0.2s ease;
+}
+
+// =====================================
+// LOGO EN MODO OSCURO
+// =====================================
+
+[data-coreui-theme='dark'] {
+  .hotel-logo {
+    filter: drop-shadow(
+      0 0 1px rgba(255, 215, 130, 0.9)
+    );
+
+    background-color: #f5f1e8;
+    padding: 8px;
+    box-sizing: border-box;
+  }
+}
+
+// =====================================
+// REDUCCION DE ANIMACIONES
+// =====================================
+
+@media (prefers-reduced-motion: reduce) {
+  .hotel-logo {
+    transition: none;
+  }
+}

@@ -1,6 +1,14 @@
 import React, { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { CCard, CCardBody, CForm, CFormInput, CRow, CCol, CButton, CAlert } from '@coreui/react'
+import { CRow, CCol } from '@coreui/react'
+import CIcon from '@coreui/icons-react'
+import { cilTags } from '@coreui/icons'
+
+import {
+  HotelForm,
+  HotelInput,
+  HotelAlert,
+} from '../../components/hotel'
 
 const FormTipoHabitacion = () => {
   const navigate = useNavigate()
@@ -8,91 +16,128 @@ const FormTipoHabitacion = () => {
   const esEdicion = id !== undefined
 
   const [mensaje, setMensaje] = useState(false)
+
   const [tipo, setTipo] = useState(
     esEdicion
-      ? { nombre: 'Normal', capacidadMaxima: 2, tarifaBase: 850.0 }
-      : { nombre: '', capacidadMaxima: 1, tarifaBase: '' },
+      ? {
+          nombre: 'Normal',
+          capacidadMaxima: 2,
+          tarifaBase: 850.0,
+        }
+      : {
+          nombre: '',
+          capacidadMaxima: 1,
+          tarifaBase: '',
+        },
   )
 
   const handleChange = (e) => {
     const { name, value } = e.target
-    setTipo((prev) => ({ ...prev, [name]: value }))
+
+    setTipo((prev) => ({
+      ...prev,
+      [name]: value,
+    }))
   }
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    console.log(esEdicion ? 'Mandando peticion de actualizacion' : 'Mandando peticion de creacion')
+
+    console.log(
+      esEdicion
+        ? 'Mandando peticion de actualizacion'
+        : 'Mandando peticion de creacion',
+    )
+
     console.log(tipo)
+
     setMensaje(true)
+
     setTimeout(() => navigate('/panel/tipohabitacion'), 2000)
   }
 
   return (
     <>
+      {/* MENSAJE DEL SISTEMA */}
+
       {mensaje && (
-        <CAlert color="success" className="text-center shadow-sm">
-          ¡Tipo de habitacion {esEdicion ? 'actualizado' : 'creado'} con exito!
-        </CAlert>
+        <HotelAlert
+          color="success"
+          title="Operación de prueba exitosa"
+          className="mb-4"
+        >
+          ¡Tipo de habitación {esEdicion ? 'actualizado' : 'creado'} en la simulación!
+        </HotelAlert>
       )}
-      <CCard className="shadow-sm mb-4">
-        <CCardBody className="p-4">
-          <h1 className="h3">{esEdicion ? 'Editar' : 'Crear'} Tipo de Habitacion</h1>
-          <hr className="mb-4" />
-          <CForm onSubmit={handleSubmit}>
-            <CFormInput
-              className="mb-4"
+
+      {/* FORMULARIO PRINCIPAL */}
+
+      <HotelForm
+        title={
+          esEdicion
+            ? 'Editar tipo de habitación'
+            : 'Crear tipo de habitación'
+        }
+        subtitle={
+          esEdicion
+            ? 'Modifique la información del tipo de habitación.'
+            : 'Complete la información del nuevo tipo de habitación.'
+        }
+        icon={<CIcon icon={cilTags} size="xl" />}
+        onSubmit={handleSubmit}
+        onCancel={() => navigate('/panel/tipohabitacion')}
+        className="mb-4"
+      >
+        <CRow className="g-4">
+
+          {/* NOMBRE DEL TIPO */}
+
+          <CCol xs={12}>
+            <HotelInput
               type="text"
               name="nombre"
-              label="Nombre del Tipo"
+              label="Nombre del tipo"
               placeholder="Suite"
               maxLength={100}
               required
               value={tipo.nombre}
               onChange={handleChange}
             />
-            <CRow>
-              <CCol md={6} className="mb-4">
-                <CFormInput
-                  type="number"
-                  name="capacidadMaxima"
-                  label="Capacidad Maxima"
-                  placeholder="2"
-                  min={1}
-                  required
-                  value={tipo.capacidadMaxima}
-                  onChange={handleChange}
-                />
-              </CCol>
-              <CCol md={6} className="mb-4">
-                <CFormInput
-                  type="number"
-                  name="tarifaBase"
-                  label="Tarifa Base"
-                  placeholder="1500.00"
-                  min={0.01}
-                  step={0.01}
-                  required
-                  value={tipo.tarifaBase}
-                  onChange={handleChange}
-                />
-              </CCol>
-            </CRow>
-            <div className="d-flex justify-content-between align-items-center gap-2 mt-4 pt-3 border-top">
-              <CButton
-                color="secondary"
-                variant="outline"
-                type="button"
-                onClick={() => navigate('/panel/tipohabitacion')}
-              >
-                Cancelar
-              </CButton>
-              <CButton color="primary" type="submit">
-                Guardar
-              </CButton>
-            </div>
-          </CForm>
-        </CCardBody>
-      </CCard>
+          </CCol>
+
+          {/* CAPACIDAD MAXIMA */}
+
+          <CCol md={6}>
+            <HotelInput
+              type="number"
+              name="capacidadMaxima"
+              label="Capacidad máxima"
+              placeholder="2"
+              min={1}
+              required
+              value={tipo.capacidadMaxima}
+              onChange={handleChange}
+            />
+          </CCol>
+
+          {/* TARIFA BASE */}
+
+          <CCol md={6}>
+            <HotelInput
+              type="number"
+              name="tarifaBase"
+              label="Tarifa base"
+              placeholder="1500.00"
+              min={0.01}
+              step={0.01}
+              required
+              value={tipo.tarifaBase}
+              onChange={handleChange}
+            />
+          </CCol>
+
+        </CRow>
+      </HotelForm>
     </>
   )
 }

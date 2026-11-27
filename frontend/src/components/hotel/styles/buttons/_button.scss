@@ -1,0 +1,70 @@
+// ==========================================
+// COMPONENTE: HOTEL BUTTON
+// ==========================================
+
+.hotel-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  border-radius: 8px;
+  font-weight: 500;
+
+  --cui-btn-padding-y: 0.55rem;
+  --cui-btn-padding-x: 1rem;
+
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.65;
+  }
+
+  .icon {
+    flex-shrink: 0;
+  }
+
+  &.btn-sm {
+    --cui-btn-padding-y: 0.3rem;
+    --cui-btn-padding-x: 0.65rem;
+  }
+
+  &.btn-lg {
+    --cui-btn-padding-y: 0.75rem;
+    --cui-btn-padding-x: 1.25rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hotel-button {
+    transition: none;
+
+    &:hover,
+    &:active {
+      transform: none;
+    }
+  }
+}
+// Contraste del boton secundario en modo oscuro
+[data-coreui-theme="dark"] {
+  .hotel-button.btn-outline-secondary {
+    --cui-btn-color: var(--cui-body-color);
+    --cui-btn-border-color: var(--cui-secondary-color);
+    --cui-btn-hover-color: var(--cui-body-color);
+    --cui-btn-hover-bg: var(--cui-secondary-bg);
+    --cui-btn-hover-border-color: var(--cui-secondary-color);
+  }
+}

@@ -1,0 +1,26 @@
+.hotel-date-field {
+  input[type='date'] {
+    min-height: 44px;
+    width: 100%;
+
+    &::-webkit-calendar-picker-indicator {
+      cursor: pointer;
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+    }
+  }
+}
+
+[data-coreui-theme='light'] {
+  .hotel-date-field input[type='date'] {
+    color-scheme: light;
+  }
+}
+
+[data-coreui-theme='dark'] {
+  .hotel-date-field input[type='date'] {
+    color-scheme: dark;
+  }
+}

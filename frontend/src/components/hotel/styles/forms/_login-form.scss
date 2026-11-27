@@ -1,0 +1,77 @@
+.hotel-login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+
+  // OPCIONES DEL FORMULARIO
+
+  .hotel-login-options {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+
+    font-size: 0.85rem;
+  }
+
+  // ENLACES
+
+  .hotel-login-link {
+    background: transparent;
+    border: none;
+    padding: 0;
+
+    font-size: 0.85rem;
+    font-weight: 600;
+
+    color: var(--cui-primary-text-emphasis);
+    cursor: pointer;
+
+    &:hover:not(:disabled) {
+      text-decoration: underline;
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+
+  // BOTON PRINCIPAL
+
+  .hotel-login-submit {
+    width: 100%;
+    min-height: 46px;
+    font-weight: 600;
+  }
+
+  // REGISTRO DE CLIENTES
+
+  .hotel-login-register {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+
+    padding-top: 20px;
+
+    border-top: 1px solid var(--cui-border-color);
+
+    font-size: 0.9rem;
+    color: var(--cui-secondary-color);
+  }
+}
+
+// DISEÑO RESPONSIVO
+
+@media (max-width: 400px) {
+  .hotel-login-form {
+    .hotel-login-options {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+}

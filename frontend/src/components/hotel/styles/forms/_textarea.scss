@@ -1,0 +1,90 @@
+// ==========================================
+// COMPONENTE: HOTEL TEXTAREA
+// ==========================================
+
+.hotel-textarea-group {
+
+  .form-label {
+    color: var(--cui-body-color);
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+
+  .hotel-required {
+    color: var(--cui-danger);
+    font-weight: 600;
+    margin-left: 3px;
+  }
+
+  .hotel-textarea {
+    min-height: 100px;
+    border-radius: 8px;
+    padding: 10px 14px;
+
+    background-color: var(--cui-body-bg);
+    color: var(--cui-body-color);
+
+    resize: vertical;
+
+    transition:
+      border-color 0.2s ease,
+      box-shadow 0.2s ease;
+
+    &::placeholder {
+      color: var(--cui-secondary-color);
+    }
+
+    &:focus {
+      border-color: var(--cui-primary);
+      box-shadow: 0 0 0 3px
+        rgba(var(--cui-primary-rgb), 0.15);
+    }
+
+    &:disabled,
+    &[readonly] {
+      background-color: var(--cui-secondary-bg);
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+    }
+
+    &.is-invalid {
+      border-color: var(--cui-form-invalid-border-color);
+    }
+
+    &.is-invalid:focus {
+      box-shadow: 0 0 0 3px
+        rgba(var(--cui-danger-rgb), 0.15);
+    }
+  }
+
+  .hotel-textarea-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+    margin-top: 6px;
+    font-size: 0.85rem;
+  }
+
+  .hotel-textarea-help {
+    color: var(--cui-secondary-color);
+  }
+
+  .hotel-textarea-count {
+    color: var(--cui-secondary-color);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .hotel-textarea-error {
+    color: var(--cui-form-invalid-color);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hotel-textarea-group .hotel-textarea {
+    transition: none;
+  }
+}

@@ -1,0 +1,95 @@
+// ==========================================
+// COMPONENTE: HOTEL PAGE HEADER
+// ==========================================
+
+.hotel-page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+
+  padding: 20px 0;
+  margin-bottom: 24px;
+
+  border-bottom: 1px solid var(--cui-border-color);
+
+  .hotel-page-heading {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    flex: 1;
+    min-width: 0;
+  }
+
+  .hotel-page-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 56px;
+    height: 56px;
+
+    border-radius: 12px;
+
+    background-color: var(--cui-primary-bg-subtle);
+    color: var(--cui-primary-text-emphasis);
+
+    flex-shrink: 0;
+  }
+
+  .hotel-page-information {
+    min-width: 0;
+  }
+
+  .hotel-page-title {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--cui-body-color);
+
+    margin: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .hotel-page-description {
+    color: var(--cui-secondary-color);
+    font-size: 0.9rem;
+    line-height: 1.5;
+
+    margin: 6px 0 0;
+  }
+
+  .hotel-page-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+}
+
+// Adaptacion a pantallas pequenas
+@media (max-width: 576px) {
+
+  .hotel-page-header {
+    align-items: flex-start;
+    flex-direction: column;
+
+    .hotel-page-title {
+      font-size: 1.4rem;
+    }
+
+    .hotel-page-icon {
+      width: 46px;
+      height: 46px;
+    }
+
+    .hotel-page-actions {
+      width: 100%;
+
+      .hotel-button {
+        flex: 1;
+      }
+    }
+  }
+}

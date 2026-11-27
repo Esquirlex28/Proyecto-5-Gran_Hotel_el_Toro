@@ -1,0 +1,33 @@
+.hotel-payment-table {
+  width: 100%;
+
+  .hotel-payment-code {
+    color: var(--cui-body-color);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .hotel-payment-method {
+    font-size: 0.9rem;
+    color: var(--cui-body-color);
+  }
+
+  .hotel-payment-amount {
+    font-weight: 600;
+    color: var(--cui-body-color);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .hotel-payment-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 6px;
+
+    button {
+      white-space: nowrap;
+    }
+  }
+}

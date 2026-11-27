@@ -9,6 +9,9 @@ const FormTipoHabitacion = React.lazy(() => import('./views/tipoHabitacion/FormT
 const Pisos = React.lazy(() => import('./views/pisos/Pisos'))
 const FormPiso = React.lazy(() => import('./views/pisos/FormPiso'))
 
+// Catalogo de componentes
+const HotelCatalog = React.lazy(() => import('./components/hotel/HotelCatalog'))
+
 const routes = [
   { path: '/panel/dashboard', exact: true, name: 'Inicio' },
   { path: '/panel/dashboard', name: 'Dashboard', element: Dashboard },
@@ -22,6 +25,9 @@ const routes = [
   { path: '/panel/pisos', exact: true, name: 'Pisos', element: Pisos },
   { path: '/panel/pisos/form', name: 'Formulario', element: FormPiso },
   { path: '/panel/pisos/:id/editar', name: 'Editar', element: FormPiso },
+
+  // Ruta temporal para probar los componentes
+  { path: '/panel/componentes', name: 'Componentes', element: HotelCatalog },
 ]
 
 export { routes }
