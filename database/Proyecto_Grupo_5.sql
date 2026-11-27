@@ -230,6 +230,7 @@ CREATE TABLE Consumos_Huesped (
     Cantidad_Consumo INT NOT NULL,
     Precio_Unitario DECIMAL(10,2) NOT NULL,
     Total_Consumo  DECIMAL(10,2) NOT NULL,
+    Estado INT NOT NULL,
     CONSTRAINT FK_Consumo_Estancia FOREIGN KEY (ID_Estancia) REFERENCES Estancias(ID_Estancia),
     CONSTRAINT FK_Consumo_Servicio FOREIGN KEY (ID_Servicio_Adicional) REFERENCES Servicios_Adicionales(ID_Servicio_Adicional),
     CONSTRAINT FK_Consumo_Empleado FOREIGN KEY (ID_Empleado) REFERENCES Empleados(ID_Empleado),
