@@ -32,3 +32,5 @@ const peticionDelete = async (ruta) => {
 
 export const getHabitaciones = () => peticionGet('/habitaciones');
 export const getHabitacion = (id) => peticionGet(`/habitaciones/${id}`);
+export const getPaises = () => peticionGet('/paises');
+export const postPais = (peticion) => peticionPost('/paises', peticion);
