@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { CListGroup, CListGroupItem } from '@coreui/react'
+
 import CIcon from '@coreui/icons-react'
 
 import {
@@ -11,9 +12,12 @@ import {
   cilPeople,
   cilDollar,
   cilBuilding,
+  cilWindow,
 } from '@coreui/icons'
 
 import image from '../../assets/images/habitacion.jpg'
+
+import { getHabitaciones } from '../../service/api'
 
 import {
   HotelButton,
@@ -21,58 +25,127 @@ import {
   HotelConfirm,
   HotelAlert,
   HotelPageHeader,
+  HotelLoader,
+  HotelBadge,
 } from '../../components/hotel'
+
+const coloresEstado = {
+  Disponible: 'success',
+  Ocupada: 'danger',
+  Mantenimiento: 'warning',
+  Reservada: 'info',
+  Limpieza: 'info',
+}
 
 const DetallesHabitacion = () => {
   const { id } = useParams()
   const navigate = useNavigate()
 
   const [modalEliminar, setModalEliminar] = useState(false)
-  const [mensaje, setMensaje] = useState(false)
+  const [habitacion, setHabitacion] = useState(null)
+  const [cargando, setCargando] = useState(true)
+  const [error, setError] = useState('')
+
+  // OBTENER INFORMACION DE LA HABITACION
 
   useEffect(() => {
-    if (!mensaje) return
+    let activo = true
 
-    const t = setTimeout(
-      () => navigate('/panel/habitaciones'),
-      2000,
-    )
+    setCargando(true)
+    setError('')
+    setHabitacion(null)
 
-    return () => clearTimeout(t)
-  }, [mensaje, navigate])
+    getHabitaciones()
+      .then((res) => {
+        if (!activo) return
+
+        const lista = Array.isArray(res) ? res : []
+
+        const hab = lista.find(
+          (h) => Number(h.ID_Habitacion) === Number(id),
+        )
+
+        if (!hab) {
+          navigate('/panel/habitaciones')
+          return
+        }
+
+        setHabitacion(hab)
+      })
+
+      .catch(() => {
+        if (activo) {
+          setError(
+            'No fue posible obtener la información de la habitación.',
+          )
+        }
+      })
+
+      .finally(() => {
+        if (activo) {
+          setCargando(false)
+        }
+      })
+
+    return () => {
+      activo = false
+    }
+  }, [id, navigate])
+
+  // ELIMINACION PENDIENTE DE IMPLEMENTACION
 
   const deleteHabitacion = (e) => {
     e?.preventDefault()
 
-    console.log('Mandando peticion de eliminacion')
-
-    setMensaje(true)
     setModalEliminar(false)
   }
 
+  // INDICADOR DE CARGA
+
+  if (cargando) {
+    return (
+      <HotelLoader
+        message="Cargando información de la habitación..."
+      />
+    )
+  }
+
+  // ERROR DE CONEXION
+
+  if (error) {
+    return (
+      <>
+        <HotelAlert color="danger" title="Error">
+          {error}
+        </HotelAlert>
+
+        <HotelButton
+          color="secondary"
+          variant="outline"
+          icon={cilArrowLeft}
+          onClick={() => navigate('/panel/habitaciones')}
+        >
+          Volver
+        </HotelButton>
+      </>
+    )
+  }
+
+  if (!habitacion) return null
+
   return (
     <>
-      {/* MENSAJE DE ELIMINACION */}
-
-      {mensaje && (
-        <HotelAlert
-          color="danger"
-          title="Eliminación de prueba"
-          className="mb-4"
-        >
-          Se ha simulado la eliminación de la habitación.
-        </HotelAlert>
-      )}
 
       {/* IMAGEN PRINCIPAL DE LA HABITACION */}
 
       <div
         className="position-relative overflow-hidden rounded-3 shadow mb-4"
-        style={{ height: 'clamp(14rem, 45vh, 26rem)' }}
+        style={{ height: '22rem' }}
       >
+
         <img
           src={image}
-          alt="Habitación"
+          alt={`Habitación ${habitacion.Numero_Habitacion}`}
           className="position-absolute top-0 start-0 w-100 h-100 object-fit-cover"
         />
 
@@ -87,7 +160,7 @@ const DetallesHabitacion = () => {
         />
 
         <h1 className="position-absolute bottom-0 start-0 m-4 h2 text-white">
-          Gestión de la habitación
+          Gestión de la habitación #{habitacion.Numero_Habitacion}
         </h1>
 
         {/* BOTON VOLVER */}
@@ -101,6 +174,7 @@ const DetallesHabitacion = () => {
         >
           Volver
         </HotelButton>
+
       </div>
 
       {/* ENCABEZADO Y ACCIONES */}
@@ -115,7 +189,7 @@ const DetallesHabitacion = () => {
               color="primary"
               variant="outline"
               icon={cilPencil}
-              disabled={mensaje}
+              disabled
               onClick={() =>
                 navigate(`/panel/habitaciones/${id}/editar`)
               }
@@ -127,7 +201,7 @@ const DetallesHabitacion = () => {
               color="danger"
               variant="outline"
               icon={cilTrash}
-              disabled={mensaje}
+              disabled
               onClick={() => setModalEliminar(true)}
             >
               Eliminar
@@ -144,7 +218,29 @@ const DetallesHabitacion = () => {
         subtitle="Características de la habitación"
         className="mb-4"
       >
+
         <CListGroup flush>
+
+          {/* ESTADO */}
+
+          <CListGroupItem className="d-flex justify-content-between align-items-center px-0 py-3">
+            <span>
+              <CIcon
+                icon={cilTags}
+                className="me-2 text-body-secondary"
+              />
+              Estado
+            </span>
+
+            <HotelBadge
+              color={
+                coloresEstado[habitacion.Nombre_Estado]
+                ?? 'secondary'
+              }
+            >
+              {habitacion.Nombre_Estado}
+            </HotelBadge>
+          </CListGroupItem>
 
           {/* TIPO DE HABITACION */}
 
@@ -157,7 +253,9 @@ const DetallesHabitacion = () => {
               Tipo
             </span>
 
-            <strong>{}</strong>
+            <strong>
+              {habitacion.Nombre_Tipo}
+            </strong>
           </CListGroupItem>
 
           {/* CAPACIDAD */}
@@ -171,7 +269,9 @@ const DetallesHabitacion = () => {
               Capacidad
             </span>
 
-            <strong>{}</strong>
+            <strong>
+              {habitacion.Capacidad_Maxima}
+            </strong>
           </CListGroupItem>
 
           {/* TARIFA */}
@@ -185,7 +285,9 @@ const DetallesHabitacion = () => {
               Tarifa
             </span>
 
-            <strong>{}</strong>
+            <strong>
+              {habitacion.Tarifa_Base}
+            </strong>
           </CListGroupItem>
 
           {/* PISO */}
@@ -199,10 +301,29 @@ const DetallesHabitacion = () => {
               Piso
             </span>
 
-            <strong>{}</strong>
+            <strong>
+              {habitacion.Nombre_Piso}
+            </strong>
+          </CListGroupItem>
+
+          {/* VISTA */}
+
+          <CListGroupItem className="d-flex justify-content-between align-items-center px-0 py-3">
+            <span>
+              <CIcon
+                icon={cilWindow}
+                className="me-2 text-body-secondary"
+              />
+              Vistas
+            </span>
+
+            <strong>
+              {habitacion.Tipo_Vista}
+            </strong>
           </CListGroupItem>
 
         </CListGroup>
+
       </HotelCard>
 
       {/* VENTANA DE CONFIRMACION */}
@@ -212,15 +333,16 @@ const DetallesHabitacion = () => {
         onClose={() => setModalEliminar(false)}
         onConfirm={deleteHabitacion}
         title="Eliminar habitación"
-        message="¿Seguro que deseas eliminar la habitación?"
+        message={`¿Seguro que deseas eliminar la habitación #${habitacion.Numero_Habitacion}?`}
         confirmText="Eliminar"
         cancelText="Cancelar"
         color="danger"
         icon={cilTrash}
         confirmIcon={cilTrash}
       >
-        Esta acción no se puede deshacer.
+        Esta operación todavía no está habilitada.
       </HotelConfirm>
+
     </>
   )
 }

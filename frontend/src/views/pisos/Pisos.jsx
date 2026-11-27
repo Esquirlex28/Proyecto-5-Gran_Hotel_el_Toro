@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import CIcon from '@coreui/icons-react'
 
@@ -16,82 +16,73 @@ import {
   HotelCard,
   HotelTable,
   HotelSearch,
-  HotelConfirm,
   HotelAlert,
+  HotelLoader,
 } from '../../components/hotel'
 
-const pisosPorDefecto = [
-  {
-    ID_Piso: 1,
-    Codigo_Piso: 'P1',
-    Nombre_Piso: 'Piso 1',
-    Capacidad_Habitaciones: 20,
-    Observaciones: 'Acceso a recepcion y restaurante',
-  },
-  {
-    ID_Piso: 2,
-    Codigo_Piso: 'P2',
-    Nombre_Piso: 'Piso 2',
-    Capacidad_Habitaciones: 20,
-    Observaciones: '',
-  },
-  {
-    ID_Piso: 3,
-    Codigo_Piso: 'P3',
-    Nombre_Piso: 'Piso 3',
-    Capacidad_Habitaciones: 18,
-    Observaciones: 'Habitaciones Business',
-  },
-  {
-    ID_Piso: 4,
-    Codigo_Piso: 'P4',
-    Nombre_Piso: 'Piso 4',
-    Capacidad_Habitaciones: 12,
-    Observaciones: 'Suites con vista al mar',
-  },
-  {
-    ID_Piso: 5,
-    Codigo_Piso: 'PH',
-    Nombre_Piso: 'Penthouse',
-    Capacidad_Habitaciones: 2,
-    Observaciones: 'Suites presidenciales',
-  },
-]
+import { getPisos } from '../../service/api'
 
 const Pisos = () => {
   const navigate = useNavigate()
 
-  const [pisos, setPisos] = useState(pisosPorDefecto)
-  const [pisoEliminar, setPisoEliminar] = useState(null)
-  const [mensaje, setMensaje] = useState(false)
+  const [pisos, setPisos] = useState([])
   const [busqueda, setBusqueda] = useState('')
+  const [cargando, setCargando] = useState(true)
+  const [error, setError] = useState('')
 
-  // FUNCION ORIGINAL DE ELIMINACION
+  // OBTENER PISOS DESDE EL BACKEND
 
-  const deletePiso = () => {
-    if (!pisoEliminar) return
+  useEffect(() => {
+    let activo = true
 
-    console.log(
-      'Mandando peticion de eliminacion',
-      pisoEliminar,
-    )
+    setCargando(true)
+    setError('')
 
-    setPisos((prev) =>
-      prev.filter(
-        (p) => p.ID_Piso !== pisoEliminar.ID_Piso,
-      ),
-    )
+    getPisos()
+      .then((res) => {
+        if (!activo) return
 
-    setPisoEliminar(null)
-    setMensaje(true)
+        if (!Array.isArray(res)) {
+          throw new Error(
+            'Respuesta incorrecta del servidor',
+          )
+        }
 
-    setTimeout(() => setMensaje(false), 2000)
-  }
+        setPisos(res)
+      })
+
+      .catch((e) => {
+        console.error(e)
+
+        if (activo) {
+          setError(
+            'No fue posible obtener los pisos del servidor.',
+          )
+        }
+      })
+
+      .finally(() => {
+        if (activo) {
+          setCargando(false)
+        }
+      })
+
+    return () => {
+      activo = false
+    }
+  }, [])
 
   // BUSCADOR DE PISOS
 
   const pisosFiltrados = pisos.filter((p) =>
-    `${p.Codigo_Piso} ${p.Nombre_Piso} ${p.Capacidad_Habitaciones} ${p.Observaciones}`
+    [
+      p.Codigo_Piso,
+      p.Nombre_Piso,
+      p.Capacidad_Habitaciones,
+      p.Observaciones,
+    ]
+      .map((valor) => String(valor ?? ''))
+      .join(' ')
       .toLowerCase()
       .includes(busqueda.trim().toLowerCase()),
   )
@@ -144,16 +135,15 @@ const Pisos = () => {
       key: 'acciones',
       label: 'Acciones',
       className: 'text-center',
-      render: (p) => (
+      render: () => (
         <div className="d-flex flex-wrap justify-content-center gap-2">
+
           <HotelButton
             color="primary"
             size="sm"
             variant="outline"
             icon={cilPencil}
-            onClick={() =>
-              navigate(`/panel/pisos/${p.ID_Piso}/editar`)
-            }
+            disabled
           >
             Modificar
           </HotelButton>
@@ -163,10 +153,11 @@ const Pisos = () => {
             size="sm"
             variant="outline"
             icon={cilTrash}
-            onClick={() => setPisoEliminar(p)}
+            disabled
           >
             Eliminar
           </HotelButton>
+
         </div>
       ),
     },
@@ -174,17 +165,6 @@ const Pisos = () => {
 
   return (
     <>
-      {/* MENSAJE DE ELIMINACION */}
-
-      {mensaje && (
-        <HotelAlert
-          color="danger"
-          title="Eliminación de prueba"
-          className="mb-4"
-        >
-          ¡Piso eliminado del listado de prueba!
-        </HotelAlert>
-      )}
 
       {/* ENCABEZADO PRINCIPAL */}
 
@@ -204,6 +184,18 @@ const Pisos = () => {
         }
       />
 
+      {/* MENSAJE DE ERROR */}
+
+      {error && (
+        <HotelAlert
+          color="danger"
+          title="Error de conexión"
+          className="mb-4"
+        >
+          {error}
+        </HotelAlert>
+      )}
+
       {/* TARJETA CON BUSCADOR Y TABLA */}
 
       <HotelCard
@@ -211,48 +203,59 @@ const Pisos = () => {
         subtitle="Listado de los pisos y sus características"
         className="mb-4"
       >
+
         <div className="mb-4">
+
           <HotelSearch
             value={busqueda}
             placeholder="Buscar piso..."
-            onChange={(e) => setBusqueda(e.target.value)}
+            disabled={cargando || Boolean(error)}
+            onChange={(e) =>
+              setBusqueda(e.target.value)
+            }
             onClear={() => setBusqueda('')}
           />
+
         </div>
 
-        <HotelTable
-          columns={columns}
-          data={pisosFiltrados}
-          rowKey="ID_Piso"
-          emptyMessage={
-            busqueda.trim()
-              ? 'No se encontraron pisos.'
-              : 'No hay pisos registrados.'
-          }
-        />
+        {/* INDICADOR DE CARGA */}
+
+        {cargando ? (
+
+          <HotelLoader
+            message="Cargando pisos del hotel..."
+          />
+
+        ) : !error && (
+
+          <>
+
+            {/* CANTIDAD DE PISOS */}
+
+            <p className="text-body-secondary mb-3">
+              Mostrando {pisosFiltrados.length} de{' '}
+              {pisos.length} pisos.
+            </p>
+
+            {/* TABLA DE PISOS */}
+
+            <HotelTable
+              columns={columns}
+              data={pisosFiltrados}
+              rowKey="ID_Piso"
+              emptyMessage={
+                busqueda.trim()
+                  ? 'No se encontraron pisos.'
+                  : 'No hay pisos registrados.'
+              }
+            />
+
+          </>
+
+        )}
+
       </HotelCard>
 
-      {/* CONFIRMACION DE ELIMINACION */}
-
-      <HotelConfirm
-        visible={pisoEliminar !== null}
-        onClose={() => setPisoEliminar(null)}
-        onConfirm={deletePiso}
-        title="Eliminar piso"
-        message={
-          <>
-            ¿Seguro que deseas eliminar el piso{' '}
-            <strong>{pisoEliminar?.Nombre_Piso}</strong>?
-          </>
-        }
-        confirmText="Eliminar"
-        cancelText="Cancelar"
-        color="danger"
-        icon={cilTrash}
-        confirmIcon={cilTrash}
-      >
-        Esta acción no se puede deshacer dentro del listado actual.
-      </HotelConfirm>
     </>
   )
 }

@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+
 import CIcon from '@coreui/icons-react'
 
 import {
@@ -9,6 +10,7 @@ import {
   cilDollar,
   cilPencil,
   cilTrash,
+  cilStar,
 } from '@coreui/icons'
 
 import {
@@ -17,84 +19,148 @@ import {
   HotelCard,
   HotelTable,
   HotelSearch,
-  HotelConfirm,
+  HotelModal,
   HotelAlert,
+  HotelLoader,
 } from '../../components/hotel'
 
-const tiposPorDefecto = [
-  {
-    ID_Tipo_Habitacion: 1,
-    Nombre_Tipo: 'Normal',
-    Capacidad_Maxima: 2,
-    Tarifa_Base: 850.0,
-  },
-  {
-    ID_Tipo_Habitacion: 2,
-    Nombre_Tipo: 'Doble',
-    Capacidad_Maxima: 4,
-    Tarifa_Base: 1200.0,
-  },
-  {
-    ID_Tipo_Habitacion: 3,
-    Nombre_Tipo: 'Business',
-    Capacidad_Maxima: 2,
-    Tarifa_Base: 1800.0,
-  },
-  {
-    ID_Tipo_Habitacion: 4,
-    Nombre_Tipo: 'Suite',
-    Capacidad_Maxima: 4,
-    Tarifa_Base: 3500.0,
-  },
-  {
-    ID_Tipo_Habitacion: 5,
-    Nombre_Tipo: 'Suite Presidencial',
-    Capacidad_Maxima: 6,
-    Tarifa_Base: 7500.0,
-  },
-]
+import {
+  getTiposHabitacion,
+  getComodidadesPorTipo,
+} from '../../service/api'
 
 const TipoHabitacion = () => {
   const navigate = useNavigate()
 
-  const [tipos, setTipos] = useState(tiposPorDefecto)
-  const [tipoEliminar, setTipoEliminar] = useState(null)
-  const [mensaje, setMensaje] = useState(false)
+  const [tipos, setTipos] = useState([])
   const [busqueda, setBusqueda] = useState('')
+  const [cargando, setCargando] = useState(true)
+  const [error, setError] = useState('')
 
-  // FUNCION ORIGINAL DE ELIMINACION
+  const [tipoComodidades, setTipoComodidades] = useState(null)
+  const [comodidades, setComodidades] = useState([])
+  const [cargandoComodidades, setCargandoComodidades] = useState(false)
+  const [errorComodidades, setErrorComodidades] = useState('')
 
-  const deleteTipo = () => {
-    if (!tipoEliminar) return
+  // OBTENER TIPOS DE HABITACION
 
-    console.log(
-      'Mandando peticion de eliminacion',
-      tipoEliminar,
-    )
+  useEffect(() => {
+    let activo = true
 
-    setTipos((prev) =>
-      prev.filter(
-        (t) =>
-          t.ID_Tipo_Habitacion !==
-          tipoEliminar.ID_Tipo_Habitacion,
-      ),
-    )
+    setCargando(true)
+    setError('')
 
-    setTipoEliminar(null)
-    setMensaje(true)
+    getTiposHabitacion()
+      .then((res) => {
+        if (!activo) return
 
-    setTimeout(() => setMensaje(false), 2000)
+        if (!Array.isArray(res)) {
+          throw new Error(
+            'Respuesta incorrecta del servidor',
+          )
+        }
+
+        setTipos(res)
+      })
+
+      .catch((e) => {
+        console.error(e)
+
+        if (activo) {
+          setError(
+            'No fue posible obtener los tipos de habitación.',
+          )
+        }
+      })
+
+      .finally(() => {
+        if (activo) {
+          setCargando(false)
+        }
+      })
+
+    return () => {
+      activo = false
+    }
+  }, [])
+
+  // ABRIR VENTANA DE COMODIDADES
+
+  const verComodidades = (tipo) => {
+    setComodidades([])
+    setErrorComodidades('')
+    setCargandoComodidades(true)
+    setTipoComodidades(tipo)
   }
 
-  // BUSCADOR DE TIPOS DE HABITACIONES
+  // OBTENER COMODIDADES DEL TIPO SELECCIONADO
+
+  useEffect(() => {
+    if (!tipoComodidades) return
+
+    let activo = true
+
+    getComodidadesPorTipo(
+      tipoComodidades.ID_Tipo_Habitacion,
+    )
+      .then((res) => {
+        if (!activo) return
+
+        if (!Array.isArray(res)) {
+          throw new Error(
+            'Respuesta incorrecta del servidor',
+          )
+        }
+
+        setComodidades(res)
+      })
+
+      .catch((e) => {
+        console.error(e)
+
+        if (activo) {
+          setErrorComodidades(
+            'No fue posible obtener las comodidades.',
+          )
+        }
+      })
+
+      .finally(() => {
+        if (activo) {
+          setCargandoComodidades(false)
+        }
+      })
+
+    return () => {
+      activo = false
+    }
+  }, [tipoComodidades])
+
+  // CERRAR VENTANA DE COMODIDADES
+
+  const cerrarComodidades = () => {
+    setTipoComodidades(null)
+    setComodidades([])
+    setErrorComodidades('')
+    setCargandoComodidades(false)
+  }
+
+  // BUSCADOR DE TIPOS DE HABITACION
 
   const tiposFiltrados = tipos.filter((t) =>
-    `${t.ID_Tipo_Habitacion} ${t.Nombre_Tipo} ${t.Capacidad_Maxima} ${t.Tarifa_Base}`
+    [
+      t.ID_Tipo_Habitacion,
+      t.Nombre_Tipo,
+      t.Capacidad_Maxima,
+      t.Tarifa_Base,
+    ]
+      .map((valor) => String(valor ?? ''))
+      .join(' ')
       .toLowerCase()
       .includes(busqueda.trim().toLowerCase()),
   )
 
-  // COLUMNAS DE LA TABLA
+  // COLUMNAS DE LA TABLA DE TIPOS
 
   const columns = [
     {
@@ -110,6 +176,7 @@ const TipoHabitacion = () => {
             icon={cilTags}
             className="me-2 text-body-secondary"
           />
+
           <strong>{t.Nombre_Tipo}</strong>
         </>
       ),
@@ -123,6 +190,7 @@ const TipoHabitacion = () => {
             icon={cilPeople}
             className="me-2 text-body-secondary"
           />
+
           {t.Capacidad_Maxima}
         </>
       ),
@@ -136,6 +204,7 @@ const TipoHabitacion = () => {
             icon={cilDollar}
             className="me-2 text-body-secondary"
           />
+
           {Number(t.Tarifa_Base).toFixed(2)}
         </>
       ),
@@ -146,16 +215,23 @@ const TipoHabitacion = () => {
       className: 'text-center',
       render: (t) => (
         <div className="d-flex flex-wrap justify-content-center gap-2">
+
+          <HotelButton
+            color="info"
+            size="sm"
+            variant="outline"
+            icon={cilStar}
+            onClick={() => verComodidades(t)}
+          >
+            Comodidades
+          </HotelButton>
+
           <HotelButton
             color="primary"
             size="sm"
             variant="outline"
             icon={cilPencil}
-            onClick={() =>
-              navigate(
-                `/panel/tipohabitacion/${t.ID_Tipo_Habitacion}/editar`,
-              )
-            }
+            disabled
           >
             Modificar
           </HotelButton>
@@ -165,28 +241,46 @@ const TipoHabitacion = () => {
             size="sm"
             variant="outline"
             icon={cilTrash}
-            onClick={() => setTipoEliminar(t)}
+            disabled
           >
             Eliminar
           </HotelButton>
+
         </div>
+      ),
+    },
+  ]
+
+  // COLUMNAS DE LA TABLA DE COMODIDADES
+
+  const columnsComodidades = [
+    {
+      key: 'Nombre_Comodidad',
+      label: 'Comodidad',
+      render: (c) => (
+        <>
+          <CIcon
+            icon={cilStar}
+            className="me-2 text-body-secondary"
+          />
+
+          <strong>{c.Nombre_Comodidad}</strong>
+        </>
+      ),
+    },
+    {
+      key: 'Observaciones',
+      label: 'Observaciones',
+      render: (c) => (
+        <span className="text-body-secondary">
+          {c.Observaciones || '—'}
+        </span>
       ),
     },
   ]
 
   return (
     <>
-      {/* MENSAJE DE ELIMINACION */}
-
-      {mensaje && (
-        <HotelAlert
-          color="danger"
-          title="Eliminación de prueba"
-          className="mb-4"
-        >
-          ¡Tipo de habitación eliminado del listado de prueba!
-        </HotelAlert>
-      )}
 
       {/* ENCABEZADO PRINCIPAL */}
 
@@ -208,6 +302,18 @@ const TipoHabitacion = () => {
         }
       />
 
+      {/* MENSAJE DE ERROR */}
+
+      {error && (
+        <HotelAlert
+          color="danger"
+          title="Error de conexión"
+          className="mb-4"
+        >
+          {error}
+        </HotelAlert>
+      )}
+
       {/* TARJETA CON BUSCADOR Y TABLA */}
 
       <HotelCard
@@ -215,48 +321,124 @@ const TipoHabitacion = () => {
         subtitle="Listado de los tipos de habitación del hotel"
         className="mb-4"
       >
+
         <div className="mb-4">
+
           <HotelSearch
             value={busqueda}
             placeholder="Buscar tipo de habitación..."
-            onChange={(e) => setBusqueda(e.target.value)}
+            disabled={cargando || Boolean(error)}
+            onChange={(e) =>
+              setBusqueda(e.target.value)
+            }
             onClear={() => setBusqueda('')}
           />
+
         </div>
 
-        <HotelTable
-          columns={columns}
-          data={tiposFiltrados}
-          rowKey="ID_Tipo_Habitacion"
-          emptyMessage={
-            busqueda.trim()
-              ? 'No se encontraron tipos de habitación.'
-              : 'No hay tipos de habitación registrados.'
-          }
-        />
+        {/* INDICADOR DE CARGA */}
+
+        {cargando ? (
+
+          <HotelLoader
+            message="Cargando tipos de habitación..."
+          />
+
+        ) : !error && (
+
+          <>
+
+            {/* CANTIDAD DE REGISTROS */}
+
+            <p className="text-body-secondary mb-3">
+              Mostrando {tiposFiltrados.length} de{' '}
+              {tipos.length} tipos de habitación.
+            </p>
+
+            {/* TABLA PRINCIPAL */}
+
+            <HotelTable
+              columns={columns}
+              data={tiposFiltrados}
+              rowKey="ID_Tipo_Habitacion"
+              emptyMessage={
+                busqueda.trim()
+                  ? 'No se encontraron tipos de habitación.'
+                  : 'No hay tipos de habitación registrados.'
+              }
+            />
+
+          </>
+
+        )}
+
       </HotelCard>
 
-      {/* CONFIRMACION DE ELIMINACION */}
+      {/* VENTANA DE COMODIDADES */}
 
-      <HotelConfirm
-        visible={tipoEliminar !== null}
-        onClose={() => setTipoEliminar(null)}
-        onConfirm={deleteTipo}
-        title="Eliminar tipo de habitación"
-        message={
+      <HotelModal
+        visible={tipoComodidades !== null}
+        onClose={cerrarComodidades}
+        title={`Comodidades de ${tipoComodidades?.Nombre_Tipo ?? ''}`}
+        subtitle="Comodidades asignadas al tipo de habitación"
+        size="lg"
+        centered
+        scrollable
+        footer={
           <>
-            ¿Seguro que deseas eliminar el tipo{' '}
-            <strong>{tipoEliminar?.Nombre_Tipo}</strong>?
+
+            <HotelButton
+              color="primary"
+              variant="outline"
+              icon={cilPlus}
+              disabled
+            >
+              Asignar comodidad
+            </HotelButton>
+
+            <HotelButton
+              color="secondary"
+              onClick={cerrarComodidades}
+            >
+              Cerrar
+            </HotelButton>
+
           </>
         }
-        confirmText="Eliminar"
-        cancelText="Cancelar"
-        color="danger"
-        icon={cilTrash}
-        confirmIcon={cilTrash}
       >
-        Esta acción no se puede deshacer dentro del listado actual.
-      </HotelConfirm>
+
+        {/* ERROR AL CONSULTAR COMODIDADES */}
+
+        {errorComodidades && (
+          <HotelAlert
+            color="danger"
+            title="Error de conexión"
+          >
+            {errorComodidades}
+          </HotelAlert>
+        )}
+
+        {/* CARGA Y TABLA DE COMODIDADES */}
+
+        {cargandoComodidades ? (
+
+          <HotelLoader
+            message="Cargando comodidades..."
+          />
+
+        ) : !errorComodidades && (
+
+          <HotelTable
+            columns={columnsComodidades}
+            data={comodidades}
+            rowKey="ID_Tipo_Habitacion_Comodidad"
+            emptyMessage="Este tipo no tiene comodidades asignadas."
+          />
+
+        )}
+
+      </HotelModal>
+
     </>
   )
 }

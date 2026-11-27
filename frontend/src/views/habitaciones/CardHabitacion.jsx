@@ -1,5 +1,6 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
+
 import {
   CCardImage,
   CListGroup,
@@ -32,13 +33,14 @@ const coloresEstado = {
 }
 
 export const CardHabitacion = ({
-  id,
-  numero = 100,
-  estado = 'Disponible',
-  tipo = 'Normal',
-  Capacidad = 4,
-  Tarifa = 1500,
-  piso = 1,
+  ID_Habitacion = 0,
+  Numero_Habitacion = 0,
+  Tipo_Vista = '',
+  Nombre_Tipo = '',
+  Capacidad_Maxima = 0,
+  Tarifa_Base = 0,
+  Nombre_Piso = '',
+  Nombre_Estado = '',
 }) => {
   const navigate = useNavigate()
 
@@ -48,24 +50,27 @@ export const CardHabitacion = ({
       bodyClassName="p-0"
       hoverable
     >
+
       {/* IMAGEN Y ESTADO DE LA HABITACION */}
 
       <div className="position-relative">
+
         <CCardImage
           orientation="top"
           src={habitacionImage}
-          alt={`Habitación ${numero}`}
+          alt={`Habitación ${Numero_Habitacion}`}
           className="object-fit-cover"
           style={{ height: '12rem' }}
         />
 
         <HotelBadge
-          color={coloresEstado[estado] ?? 'secondary'}
+          color={coloresEstado[Nombre_Estado] ?? 'secondary'}
           soft={false}
           className="position-absolute top-0 start-0 m-2 px-3 py-2"
         >
-          {estado}
+          {Nombre_Estado}
         </HotelBadge>
+
       </div>
 
       {/* INFORMACION DE LA HABITACION */}
@@ -73,7 +78,7 @@ export const CardHabitacion = ({
       <div className="p-3">
 
         <h5 className="mb-3">
-          Habitación #{numero}
+          Habitación #{Numero_Habitacion}
         </h5>
 
         <CListGroup flush>
@@ -89,7 +94,7 @@ export const CardHabitacion = ({
               Tipo
             </span>
 
-            <strong>{tipo}</strong>
+            <strong>{Nombre_Tipo}</strong>
           </CListGroupItem>
 
           {/* CAPACIDAD */}
@@ -103,7 +108,7 @@ export const CardHabitacion = ({
               Capacidad
             </span>
 
-            <strong>{Capacidad}</strong>
+            <strong>{Capacidad_Maxima}</strong>
           </CListGroupItem>
 
           {/* TARIFA */}
@@ -117,7 +122,7 @@ export const CardHabitacion = ({
               Tarifa
             </span>
 
-            <strong>{Tarifa}</strong>
+            <strong>{Tarifa_Base}</strong>
           </CListGroupItem>
 
           {/* PISO */}
@@ -131,7 +136,7 @@ export const CardHabitacion = ({
               Piso
             </span>
 
-            <strong>{piso}</strong>
+            <strong>{Nombre_Piso}</strong>
           </CListGroupItem>
 
         </CListGroup>
@@ -142,12 +147,15 @@ export const CardHabitacion = ({
           className="w-100 mt-3"
           color="primary"
           icon={cilArrowRight}
-          onClick={() => navigate(`/panel/habitaciones/${id}`)}
+          onClick={() =>
+            navigate(`/panel/habitaciones/${ID_Habitacion}`)
+          }
         >
           Gestionar habitación
         </HotelButton>
 
       </div>
+
     </HotelCard>
   )
 }

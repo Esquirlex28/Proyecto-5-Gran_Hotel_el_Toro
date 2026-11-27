@@ -1,8 +1,11 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { CRow, CCol } from '@coreui/react'
+
 import CIcon from '@coreui/icons-react'
 import { cilBuilding } from '@coreui/icons'
+
+import { postPiso } from '../../service/api'
 
 import {
   HotelForm,
@@ -14,25 +17,33 @@ import {
 const FormPiso = () => {
   const navigate = useNavigate()
   const { id } = useParams()
+
   const esEdicion = id !== undefined
 
   const [mensaje, setMensaje] = useState(false)
+  const [error, setError] = useState('')
+  const [guardando, setGuardando] = useState(false)
 
-  const [piso, setPiso] = useState(
-    esEdicion
-      ? {
-          codigo: 'P1',
-          nombre: 'Piso 1',
-          capacidadHabitaciones: 20,
-          observaciones: 'Acceso a recepcion y restaurante',
-        }
-      : {
-          codigo: '',
-          nombre: '',
-          capacidadHabitaciones: 1,
-          observaciones: '',
-        },
-  )
+  const [piso, setPiso] = useState({
+    Codigo_Piso: '',
+    Nombre_Piso: '',
+    Capacidad_Habitaciones: 1,
+    Observaciones: '',
+  })
+
+  // REDIRECCION DESPUES DE GUARDAR
+
+  useEffect(() => {
+    if (!mensaje) return
+
+    const temporizador = setTimeout(() => {
+      navigate('/panel/pisos')
+    }, 2000)
+
+    return () => clearTimeout(temporizador)
+  }, [mensaje, navigate])
+
+  // CAMBIOS EN LOS CAMPOS
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -43,40 +54,119 @@ const FormPiso = () => {
     }))
   }
 
-  const handleSubmit = (e) => {
+  // GUARDAR PISO
+
+  const handleSubmit = async (e) => {
     e.preventDefault()
 
-    console.log(
-      esEdicion
-        ? 'Mandando peticion de actualizacion'
-        : 'Mandando peticion de creacion',
-    )
+    if (guardando || mensaje) return
 
-    console.log(piso)
+    setError('')
 
-    setMensaje(true)
+    // LA EDICION TODAVIA NO ESTA IMPLEMENTADA
 
-    setTimeout(() => navigate('/panel/pisos'), 2000)
+    if (esEdicion) {
+      setError(
+        'La modificación de pisos todavía no está habilitada.',
+      )
+      return
+    }
+
+    setGuardando(true)
+
+    try {
+      const res = await postPiso({
+        Codigo_Piso: piso.Codigo_Piso.trim(),
+
+        Nombre_Piso: piso.Nombre_Piso.trim(),
+
+        Capacidad_Habitaciones: Number(
+          piso.Capacidad_Habitaciones,
+        ),
+
+        Observaciones: piso.Observaciones.trim(),
+      })
+
+      if (res?.error) {
+        setError(res.error)
+        return
+      }
+
+      if (!res) {
+        setError(
+          'No se recibió una respuesta del servidor.',
+        )
+        return
+      }
+
+      setMensaje(true)
+
+    } catch (e) {
+      console.error(e)
+
+      setError(
+        'No se pudo conectar con el servidor.',
+      )
+    } finally {
+      setGuardando(false)
+    }
   }
+
+  const bloqueado =
+    guardando ||
+    mensaje ||
+    esEdicion
 
   return (
     <>
-      {/* MENSAJE DEL SISTEMA */}
+
+      {/* MENSAJE DE EXITO */}
 
       {mensaje && (
         <HotelAlert
           color="success"
-          title="Operación de prueba exitosa"
+          title="Operación exitosa"
           className="mb-4"
         >
-          ¡Piso {esEdicion ? 'actualizado' : 'creado'} en la simulación!
+          ¡Piso creado con éxito!
+        </HotelAlert>
+      )}
+
+      {/* MENSAJE DE ERROR */}
+
+      {error && (
+        <HotelAlert
+          color="danger"
+          title="Error"
+          className="mb-4"
+          dismissible
+          onClose={() => setError('')}
+        >
+          {error}
+        </HotelAlert>
+      )}
+
+      {/* AVISO SOBRE LA EDICION */}
+
+      {esEdicion && (
+        <HotelAlert
+          color="warning"
+          title="Función no disponible"
+          className="mb-4"
+        >
+          La modificación de pisos todavía
+          no está habilitada.
         </HotelAlert>
       )}
 
       {/* FORMULARIO PRINCIPAL */}
 
       <HotelForm
-        title={esEdicion ? 'Editar piso' : 'Crear piso'}
+        title={
+          esEdicion
+            ? 'Editar piso'
+            : 'Crear piso'
+        }
         subtitle={
           esEdicion
             ? 'Modifique la información del piso.'
@@ -85,8 +175,13 @@ const FormPiso = () => {
         icon={<CIcon icon={cilBuilding} size="xl" />}
         onSubmit={handleSubmit}
         onCancel={() => navigate('/panel/pisos')}
+        submitText="Guardar"
+        loading={guardando}
+        disabled={guardando || mensaje}
+        showSubmit={!esEdicion}
         className="mb-4"
       >
+
         <CRow className="g-4">
 
           {/* CODIGO DEL PISO */}
@@ -94,12 +189,13 @@ const FormPiso = () => {
           <CCol md={6}>
             <HotelInput
               type="text"
-              name="codigo"
+              name="Codigo_Piso"
               label="Código del piso"
               placeholder="P1"
               maxLength={25}
               required
-              value={piso.codigo}
+              disabled={bloqueado}
+              value={piso.Codigo_Piso}
               onChange={handleChange}
             />
           </CCol>
@@ -109,12 +205,13 @@ const FormPiso = () => {
           <CCol md={6}>
             <HotelInput
               type="text"
-              name="nombre"
+              name="Nombre_Piso"
               label="Nombre del piso"
               placeholder="Piso 1"
               maxLength={50}
               required
-              value={piso.nombre}
+              disabled={bloqueado}
+              value={piso.Nombre_Piso}
               onChange={handleChange}
             />
           </CCol>
@@ -124,12 +221,13 @@ const FormPiso = () => {
           <CCol xs={12}>
             <HotelInput
               type="number"
-              name="capacidadHabitaciones"
+              name="Capacidad_Habitaciones"
               label="Capacidad de habitaciones"
               placeholder="20"
               min={1}
               required
-              value={piso.capacidadHabitaciones}
+              disabled={bloqueado}
+              value={piso.Capacidad_Habitaciones}
               onChange={handleChange}
             />
           </CCol>
@@ -143,15 +241,18 @@ const FormPiso = () => {
               maxLength={500}
               helpText="Opcional. Máximo 500 caracteres."
               placeholder="Escriba las observaciones del piso..."
-              name="observaciones"
-              value={piso.observaciones}
+              name="Observaciones"
+              disabled={bloqueado}
+              value={piso.Observaciones}
               onChange={handleChange}
               showCount
             />
           </CCol>
 
         </CRow>
+
       </HotelForm>
+
     </>
   )
 }

@@ -1,6 +1,15 @@
 import React from 'react'
 import CIcon from '@coreui/icons-react'
-import { cilBed, cilBuilding, cilSpeedometer, cilTags } from '@coreui/icons'
+import {
+  cilBed,
+  cilBuilding,
+  cilFlagAlt,
+  cilMap,
+  cilPeople,
+  cilSpeedometer,
+  cilStar,
+  cilTags,
+} from '@coreui/icons'
 import { CNavItem, CNavTitle } from '@coreui/react'
 
 const _nav = [
@@ -28,6 +37,43 @@ const _nav = [
     name: 'Pisos',
     to: '/panel/pisos',
     icon: <CIcon icon={cilBuilding} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'Estados Habitacion',
+    to: '/panel/estadoshabitacion',
+    icon: <CIcon icon={cilFlagAlt} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'Comodidades',
+    to: '/panel/comodidades',
+    icon: <CIcon icon={cilStar} customClassName="nav-icon" />,
+  },
+  { component: CNavTitle, name: 'Usuarios y Cuentas' },
+  {
+    component: CNavItem,
+    name: 'Paises',
+    to: '/panel/paises',
+    icon: <CIcon icon={cilMap} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'Clientes',
+    to: '/panel/clientes',
+    icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'Empleados',
+    to: '/panel/empleados',
+    icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'Cargos',
+    to: '/panel/cargos',
+    icon: <CIcon icon={cilTags} customClassName="nav-icon" />,
   },
 ]
 

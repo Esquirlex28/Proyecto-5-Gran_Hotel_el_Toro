@@ -1,8 +1,11 @@
-import React, { useState } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { CRow, CCol } from '@coreui/react'
+
 import CIcon from '@coreui/icons-react'
 import { cilTags } from '@coreui/icons'
+
+import { postTipoHabitacion } from '../../service/api'
 
 import {
   HotelForm,
@@ -12,24 +15,30 @@ import {
 
 const FormTipoHabitacion = () => {
   const navigate = useNavigate()
-  const { id } = useParams()
-  const esEdicion = id !== undefined
 
   const [mensaje, setMensaje] = useState(false)
+  const [error, setError] = useState('')
+  const [guardando, setGuardando] = useState(false)
 
-  const [tipo, setTipo] = useState(
-    esEdicion
-      ? {
-          nombre: 'Normal',
-          capacidadMaxima: 2,
-          tarifaBase: 850.0,
-        }
-      : {
-          nombre: '',
-          capacidadMaxima: 1,
-          tarifaBase: '',
-        },
-  )
+  const [tipo, setTipo] = useState({
+    Nombre_Tipo: '',
+    Capacidad_Maxima: 1,
+    Tarifa_Base: '',
+  })
+
+  // REDIRECCION DESPUES DE GUARDAR
+
+  useEffect(() => {
+    if (!mensaje) return
+
+    const temporizador = setTimeout(() => {
+      navigate('/panel/tipohabitacion')
+    }, 2000)
+
+    return () => clearTimeout(temporizador)
+  }, [mensaje, navigate])
+
+  // CAMBIOS EN LOS CAMPOS
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -40,54 +49,101 @@ const FormTipoHabitacion = () => {
     }))
   }
 
-  const handleSubmit = (e) => {
+  // GUARDAR TIPO DE HABITACION
+
+  const handleSubmit = async (e) => {
     e.preventDefault()
 
-    console.log(
-      esEdicion
-        ? 'Mandando peticion de actualizacion'
-        : 'Mandando peticion de creacion',
-    )
+    if (guardando || mensaje) return
 
-    console.log(tipo)
+    setError('')
+    setGuardando(true)
 
-    setMensaje(true)
+    try {
+      const res = await postTipoHabitacion({
+        Nombre_Tipo: tipo.Nombre_Tipo.trim(),
 
-    setTimeout(() => navigate('/panel/tipohabitacion'), 2000)
+        Capacidad_Maxima: Number(
+          tipo.Capacidad_Maxima,
+        ),
+
+        Tarifa_Base: Number(
+          tipo.Tarifa_Base,
+        ),
+      })
+
+      if (res?.error) {
+        setError(res.error)
+        return
+      }
+
+      if (!res) {
+        setError(
+          'No se recibió una respuesta del servidor.',
+        )
+        return
+      }
+
+      setMensaje(true)
+
+    } catch (e) {
+      console.error(e)
+
+      setError(
+        'No se pudo conectar con el servidor.',
+      )
+    } finally {
+      setGuardando(false)
+    }
   }
+
+  const bloqueado = guardando || mensaje
 
   return (
     <>
-      {/* MENSAJE DEL SISTEMA */}
+
+      {/* MENSAJE DE EXITO */}
 
       {mensaje && (
         <HotelAlert
           color="success"
-          title="Operación de prueba exitosa"
+          title="Operación exitosa"
           className="mb-4"
         >
-          ¡Tipo de habitación {esEdicion ? 'actualizado' : 'creado'} en la simulación!
+          ¡Tipo de habitación creado con éxito!
+        </HotelAlert>
+      )}
+
+      {/* MENSAJE DE ERROR */}
+
+      {error && (
+        <HotelAlert
+          color="danger"
+          title="Error"
+          className="mb-4"
+          dismissible
+          onClose={() => setError('')}
+        >
+          {error}
         </HotelAlert>
       )}
 
       {/* FORMULARIO PRINCIPAL */}
 
       <HotelForm
-        title={
-          esEdicion
-            ? 'Editar tipo de habitación'
-            : 'Crear tipo de habitación'
-        }
-        subtitle={
-          esEdicion
-            ? 'Modifique la información del tipo de habitación.'
-            : 'Complete la información del nuevo tipo de habitación.'
-        }
+        title="Crear tipo de habitación"
+        subtitle="Complete la información del nuevo tipo de habitación."
         icon={<CIcon icon={cilTags} size="xl" />}
         onSubmit={handleSubmit}
-        onCancel={() => navigate('/panel/tipohabitacion')}
+        onCancel={() =>
+          navigate('/panel/tipohabitacion')
+        }
+        submitText="Guardar"
+        loading={guardando}
+        disabled={bloqueado}
         className="mb-4"
       >
+
         <CRow className="g-4">
 
           {/* NOMBRE DEL TIPO */}
@@ -95,12 +151,13 @@ const FormTipoHabitacion = () => {
           <CCol xs={12}>
             <HotelInput
               type="text"
-              name="nombre"
+              name="Nombre_Tipo"
               label="Nombre del tipo"
               placeholder="Suite"
               maxLength={100}
               required
-              value={tipo.nombre}
+              disabled={bloqueado}
+              value={tipo.Nombre_Tipo}
               onChange={handleChange}
             />
           </CCol>
@@ -110,12 +167,13 @@ const FormTipoHabitacion = () => {
           <CCol md={6}>
             <HotelInput
               type="number"
-              name="capacidadMaxima"
+              name="Capacidad_Maxima"
               label="Capacidad máxima"
               placeholder="2"
               min={1}
               required
-              value={tipo.capacidadMaxima}
+              disabled={bloqueado}
+              value={tipo.Capacidad_Maxima}
               onChange={handleChange}
             />
           </CCol>
@@ -125,19 +183,22 @@ const FormTipoHabitacion = () => {
           <CCol md={6}>
             <HotelInput
               type="number"
-              name="tarifaBase"
+              name="Tarifa_Base"
               label="Tarifa base"
               placeholder="1500.00"
               min={0.01}
               step={0.01}
               required
-              value={tipo.tarifaBase}
+              disabled={bloqueado}
+              value={tipo.Tarifa_Base}
               onChange={handleChange}
             />
           </CCol>
 
         </CRow>
+
       </HotelForm>
+
     </>
   )
 }
