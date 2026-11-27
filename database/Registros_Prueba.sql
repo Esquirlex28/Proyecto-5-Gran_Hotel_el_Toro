@@ -148,17 +148,19 @@ INSERT INTO Huespedes (ID_Pais, DNI, Pasaporte, Primer_Nombre, Segundo_Nombre, P
 (14,NULL,'FR9900112','Camille','Sophie','Dubois','Laurent','+33 6 12 34 56 78','camille.dubois@correo.com','1988-02-02',2),
 (8,NULL,'US5566778','David','Michael','Brown',NULL,'+1 212 555 0199','david.brown@correo.com','1969-11-02',1);
 
+-- Contraseñas guardadas con bcrypt (bcryptjs, costo 10), igual que en el backend.
+-- Contraseña de cada cliente: Cliente#2026-<ID_Huesped>  (ejemplo: juan.perez -> Cliente#2026-1)
 INSERT INTO Usuarios_Huesped (ID_Huesped, Usuario, Contraseña_Hash, Estado) VALUES
-(1,'juan.perez',SHA2('Cliente#2026-1',256),1),
-(2,'maria.hernandez',SHA2('Cliente#2026-2',256),1),
-(3,'carlos.mejia',SHA2('Cliente#2026-3',256),1),
-(4,'marvin.avila',SHA2('Cliente#2026-4',256),1),
-(5,'hector.rodriguez',SHA2('Cliente#2026-5',256),1),
-(6,'daniela.matamoros',SHA2('Cliente#2026-6',256),1),
-(7,'luis.morales',SHA2('Cliente#2026-7',256),0),
-(8,'sofia.vargas',SHA2('Cliente#2026-8',256),1),
-(10,'camille.dubois',SHA2('Cliente#2026-10',256),1),
-(11,'david.brown',SHA2('Cliente#2026-11',256),1);
+(1,'juan.perez','$2b$10$tor5yIv/8lqkxORITOLUJ.Im82gnMEfpJRFh1Q0iJpS2.ozj22ZIW',1),
+(2,'maria.hernandez','$2b$10$Iz7e0973UCzA0jfIJUqWH.D2J3K1IoUjC57dCwS54wwTm5bHRLU5e',1),
+(3,'carlos.mejia','$2b$10$MXlPhXAsuRJwWWhMu6PCWuOZVC21qRnLLo2ocP0CRPq4XtIggg6uG',1),
+(4,'marvin.avila','$2b$10$0nQWO0N2BX6rw3i/HjEStOOcsohcayVqfPGTdGAGhb3gdgHLAZH6G',1),
+(5,'hector.rodriguez','$2b$10$QY0vRCb6wrPTnia6OX7vs.SKzVQFwASZbsr1zRzz3PA0bCz3QvKWy',1),
+(6,'daniela.matamoros','$2b$10$EW7ydd9zwzptQVeDz3exTOh/LJFie.QTP1hX3FsN81Pt1523vnvEa',1),
+(7,'luis.morales','$2b$10$QR8nDFnhOfwPljDbYVKmhOgsZfKoPsnR9B09FMTaJmWTNeMkHsQIi',0),
+(8,'sofia.vargas','$2b$10$X0Z8bnmT7.HYR.IX1VvLhOPVU8zg/k1DHf0xvsyXRQ85bGv9HWLtO',1),
+(10,'camille.dubois','$2b$10$4Wvj45rxt98JTNeolNHNxuw99lyJ3rvJMi3uA1HkdTwwqIquSzBae',1),
+(11,'david.brown','$2b$10$1hVc4X5JR8WgumGTEYwqfOqyD8zJB8xsqF4ayLk377PBJIMdvP7q.',1);
 
 INSERT INTO Cargos_Empleado (Nombre_Cargo, Descripcion, Salario_Base) VALUES
 ('Gerente General','Dirige la operación total del hotel',45000.00),
@@ -192,20 +194,22 @@ INSERT INTO Empleados (DNI, Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segu
 ('0801198290128','Gabriela','María','Euceda','Rueda','+504 9911-0029','gabriela.euceda@hoteltoro.com','1982-07-17',2,12,25000.00,1),
 ('0101198323489','Teresa','de Jesús','Rápalo','Montoya','+504 9911-0030','teresa.rapalo@hoteltoro.com','1983-08-25',2,13,9800.00,1);
 
+-- Contraseñas guardadas con bcrypt (bcryptjs, costo 10), igual que en el backend.
+-- Contraseña de cada empleado: Hotel#2026-<ID_Empleado>  (ejemplo: kordonez -> Hotel#2026-2)
 INSERT INTO Usuarios_Empleado (ID_Empleado, Usuario, Contraseña_Hash, Estado) VALUES
-(1,'rzelaya',SHA2('Hotel#2026-1',256),1),
-(2,'kordonez',SHA2('Hotel#2026-2',256),1),
-(3,'jaguilar',SHA2('Hotel#2026-3',256),1),
-(4,'smoncada',SHA2('Hotel#2026-4',256),1),
-(5,'mcaceres',SHA2('Hotel#2026-5',256),1),
-(6,'dlagos',SHA2('Hotel#2026-6',256),1),
-(7,'jpavon',SHA2('Hotel#2026-7',256),0),
-(8,'ogiron',SHA2('Hotel#2026-8',256),1),
-(10,'ecabrera',SHA2('Hotel#2026-10',256),1),
-(11,'amendoza',SHA2('Hotel#2026-11',256),1),
-(13,'wtorres',SHA2('Hotel#2026-13',256),1),
-(14,'geuceda',SHA2('Hotel#2026-14',256),1),
-(15,'trapalo',SHA2('Hotel#2026-15',256),1);
+(1,'rzelaya','$2b$10$B54jR5o.RURd5ZDxdQ40wesccPlYpLJ1ccqXD4jHsr774eZPcBrpa',1),
+(2,'kordonez','$2b$10$Sw8VwwRQt5VPHos4r79O.eRudiBQHkbzAVJdavgRsO4sfSmqs3VHq',1),
+(3,'jaguilar','$2b$10$GZUTH1gVom.sTGM1VzMcC.YxSvPPll8elg94LViheySESVESQ5uCu',1),
+(4,'smoncada','$2b$10$ySbq9Czbb07n88YYQRLjselaBCE4BzLm/wp0YumEpqnFnRvi6i572',1),
+(5,'mcaceres','$2b$10$G1qrsOhfVZX0P3uuXE461upOmdDNDzHytfQNzcZS3PSJ6zPd7z40a',1),
+(6,'dlagos','$2b$10$sJfVfYLe1gb1TnC3n3FHxePUz6OxrFXwN9Neg4ik1dr6IRIVL1qHW',1),
+(7,'jpavon','$2b$10$0Z11TbPQykF8YE3eoeBRteGCj8lBUx.UnnJQ4RE4mSG1EaQktgQ/.',0),
+(8,'ogiron','$2b$10$aP0xrwnFDHsI8YjSHCKaJOlaLEMSmbI19eVEKkDhQAwDs3DiOOnO2',1),
+(10,'ecabrera','$2b$10$CnPtidtqIpFbLSxcTjOMxOK6ZLab7whlEwNFRsiwGP17yRCuFeJXe',1),
+(11,'amendoza','$2b$10$G3/Vb1LxrTKzNriEaLUG2uCm9idkZqpY5vg8VRLKUMbuw2vJv30.C',1),
+(13,'wtorres','$2b$10$FOfFlMETb9/KpYoTrkjqbewD/WTcMr0PipNCtX/fuCloFkEsKtegy',1),
+(14,'geuceda','$2b$10$t3Reoo82Eu/WDKa/Gyauu.eiNI5Y/T6fVNEIxZ7C/WmZ1mRiJfn1q',1),
+(15,'trapalo','$2b$10$A4yfb0OAe1aUKEDrJEkE1..000bGBEndqQfAj9ClT8icC/6hrJ./K',1);
 
 INSERT INTO Categorias_Servicios (Nombre_Categoria, Descripcion, Estado) VALUES
 ('Restaurante','Desayunos, almuerzos y cenas en el restaurante',1),
