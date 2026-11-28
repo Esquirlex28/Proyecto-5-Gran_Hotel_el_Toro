@@ -24,6 +24,9 @@ import './scss/style.scss'
 // Containers
 const DefaultLayout = React.lazy(() => import('./layout/DefaultLayout'))
 
+// Landing Page
+const LandingPage = React.lazy(() => import('./views/landing/LandingPage'))
+
 // Pages
 const Login = React.lazy(() => import('./views/authentication/login/Login'))
 const Register = React.lazy(() => import('./views/authentication/register/Register'))
@@ -90,6 +93,7 @@ const App = () => {
         }
       >
         <Routes>
+          <Route path="/" name="Landing Page" element={<LandingPage />} />
           <Route exact path="/panel" name="Login Page" element={<Login />} />
           <Route exact path="/authentication/login" name="Login Page" element={<Login />} />
           <Route
